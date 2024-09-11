@@ -4,11 +4,13 @@
 
 number = int(input("Ingrese el limite de fibonacci: "))
 contador = 0
-init = 0
-aux1 = init
-aux2 = aux1 + init
+aux1 = 1
+aux2 = 0
 resultado = 0
 
-while contador<=number:
-    init= init+1
+while contador<number:
+    print(resultado)
     contador = contador+1
+    resultado = aux1 + aux2
+    aux1 = aux2
+    aux2= resultado
