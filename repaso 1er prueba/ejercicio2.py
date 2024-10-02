@@ -3,4 +3,5 @@
 pregunta = "si"
 
 while pregunta == "si":
+    num = int(input("ingrese un numero: "))
     

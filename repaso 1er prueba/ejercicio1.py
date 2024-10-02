@@ -1,4 +1,4 @@
-#dado n numeros enteros positivos determinar el mayor y el menor valor analize todos los casos y muestre el mensaje
+# 1- Dado N entero positivo determinar el mayor y el menor valor. Analice todo los casos y presente el mensaje correspondiente.
 
 pregunta = "si"
 mayor = 0
