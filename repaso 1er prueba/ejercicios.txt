@@ -1,0 +1,8 @@
+1- Dado N entero positivo determinar el mayor y el menor valor. Analice todo los casos y presente el mensaje correspondiente.
+2- Dado N entero par positivo presente en pantalla, si existen los N números de N cifras tal que la segunda mitad del número sea un valor aleatorio que presente N div 2 cifras.
+3. Ingrese numero mientas sean distintos de cero a continuación ordenar los números impares de mayor a menor sin tener los pares presentes la lista de los valores ingresados y la lista ordenada.
+4- Dado M entero positivo determinar L tal que 1+2+……. + L <= M
+5- Dado una lista de N entero positivo presentar en pantalla una nueva lista que contiene los elementos de la lista original que no estén repetidos junto a lista original.
+6- Dado N entero positivo encuentre el primo más cercano a él y superior a N
+7- Dado un texto determinar cuál es la vocal que más se presenta tenga en cuenta todos los casos
+8- Dado N entero positivo determina todos los números tales que sean iguales a la suma de sus divisores
