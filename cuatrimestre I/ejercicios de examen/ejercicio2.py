@@ -9,13 +9,14 @@ while pregunta == "si":
         number = int(input("Debes ingresar un numero entero positivo: "))
     cont = 2
     esPrimo = True
-    while cont < number:
-        if number % cont == 0:
-            esPrimo = False
-            break
-        cont += 1
-    if esPrimo:
-        sumaPrimos = sumaPrimos + number
+    if number != 1:
+        while cont < number:
+            if number % cont == 0:
+                esPrimo = False
+                break
+            cont += 1
+        if esPrimo:
+            sumaPrimos = sumaPrimos + number
     pregunta = input("Desea ingresar mas numeros: si o no ")
 
 print("la suma total de primos ingresados es: ", sumaPrimos)    

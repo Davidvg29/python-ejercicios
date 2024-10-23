@@ -1,4 +1,5 @@
-# Desarrolle un sistema que permita ingresar numeros enteros mientras sean distintos de cero e ir sumandolos. al ingresar un numero cero el sistema debe presentar el valor de la suma en pantalla
+# Desarrolle un sistema que permita ingresar numeros enteros mientras sean distintos de cero 
+# e ir sumandolos. al ingresar un numero cero el sistema debe presentar el valor de la suma en pantalla
 
 suma = 0
 
