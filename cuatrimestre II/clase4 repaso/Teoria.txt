@@ -1,0 +1,60 @@
+-------------------- Algoritmos ---------------------------
+
+Algoritmo secuenciales
+
+Algoritmos que en su desarrollo para solucionar un problema no debemos temar desiciones
+Ejemplo1.py
+
+Algoritmo de desiciones
+
+Algoritmos que pueden tomar una o varias desiciones durante su desarrollo y en base a eso redirigir el trafico de datos
+if
+Ejemplo2.py
+if/else
+Ejemplo3.py
+
+if/elif/else en este caso el else es la ultima siempre
+Ejemplo4.py
+
+-------------------- Funciones -------------------------------
+
+En python las funciones trabajan asi 
+primero definimos la funciones
+segundo invocamos la funcio
+
+¿Como defino una funcion?
+
+def nombreDeLaFuncion(parametro1,parametro2,...,parametroN):
+    tarea1
+    tarea2
+    .....
+    tareaN
+    return variableADevolver
+
+se puede devolver mas de una variable o una sola 
+
+¿Como la invoco?
+Simplemente la llamo por su nombre con los parametros pasados
+nombreDeLaFuncion(parametro1,parametro2,...,parametroN)
+
+Ejemplo5.py
+Ejemplo6.py
+
+Estructura de repeticion
+
+while condicionLogica:
+    Mientras la condicion se cumpla realizo estas tareas
+    Tareas 1
+    Tareas 2
+    ...
+    Tareas N 
+Cuando ya no se cumple ejecuto esto
+
+Ejemplo7.py
+Ejemplo8.py
+Ejemplo9.py
+Ejemplo10.py
+Ejemplo11.py
+Ejemplo12.py
+Ejemplo13.py
+
