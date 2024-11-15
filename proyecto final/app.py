@@ -1,9 +1,70 @@
 from tkinter import *
 
-listaAlumnos=[[43501432, "David Valdez Gramajo", ]]
-listaMovimientos = [[1, 43501432, "11/11/2024", "14:30", "17:00", "Micro cine"]]
+listaAlumnos=[
+    [43501432, "David Valdez Gramajo", "vallistos 200v m6 c21", "Banda del Rio Sali", "Tucuman", 3813965671, "Masculino", "29/07/2001", "sin observacion", "david@gmail.com"],
+    [84757575, "Juan Mora", "vallistos 200v m6 c21", "Yerba Buena", "Tucuman", 3813123471, "Masculino", "29/07/2001", "sin observacion", "juan@gmail.com"]
+]
+listaMovimientos = [
+    [1, 43501432, "11/11/2024", "14:30", "17:00", "Micro cine"],
+    [2, 84757575, "15/11/2024", "15:30", "17:00", "Entretenimiento"]
+]
 # ----------------INICIO FRONTEND----------------
 
+#funciones frontend
+def mostrarTablaUltimosMovimientos(listaMovimientos):
+    #muestra las tablas de ultimos movimientos
+    subtitle = Label(window, text="Ultimos movimientos:", font=("Verdana",10))
+    subtitle.grid(row=1, column=0, padx=10, pady=10,sticky="w")
+
+    #inicio titulo de tabla de ultimos movimientos
+    dniLabel = Label(window, text="DNI", font=("Verdana",10), bg="grey")
+    dniLabel.grid(row=2, column=0, padx=0, pady=10, sticky="nsew",)
+
+    nombreLabel = Label(window, text="Nombre", font=("Verdana",10), bg="grey")
+    nombreLabel.grid(row=2, column=1, padx=0, pady=10, sticky="nsew")
+
+    fechaLabel = Label(window, text="Fecha", font=("Verdana",10), bg="grey")
+    fechaLabel.grid(row=2, column=2, padx=0, pady=10, sticky="nsew")
+
+    horaEntadaLabel = Label(window, text="Hora entrada", font=("Verdana",10), bg="grey")
+    horaEntadaLabel.grid(row=2, column=3, padx=0, pady=10, sticky="nsew")
+
+    horaSalidaLabel = Label(window, text="Hora salida", font=("Verdana",10), bg="grey")
+    horaSalidaLabel.grid(row=2, column=4, padx=0, pady=10, sticky="nsew")
+
+    areaUtilizadaLabel = Label(window, text="Area utilizada", font=("Verdana",10), bg="grey")
+    areaUtilizadaLabel.grid(row=2, column=5, padx=0, pady=10, sticky="nsew")
+    #fin titulo tablla de ultimos movimientos
+
+    contadorListaMovimientos = len(listaMovimientos)
+    cont = 0
+    row=3
+    while cont < contadorListaMovimientos:
+        #inicio contenido de tabla de ultimos movimientos
+        dniEntry = Label(window, text="43501432", font=("Verdana",10), bg="red")
+        dniEntry.grid(row=row, column=0, padx=0, pady=5, sticky="nsew")
+
+        nombreEntry = Label(window, text="David Valdez Gramajo", font=("Verdana",10))
+        nombreEntry.grid(row=row, column=1, padx=0, pady=5, sticky="nsew")
+
+        fechaEntry = Label(window, text="11/11/2024", font=("Verdana",10))
+        fechaEntry.grid(row=row, column=2, padx=0, pady=5, sticky="nsew")
+
+        horaEntadaEntry = Label(window, text="14:30", font=("Verdana",10))
+        horaEntadaEntry.grid(row=row, column=3, padx=0, pady=5, sticky="nsew")
+
+        horaSalidaEntry = Label(window, text="17:00", font=("Verdana",10))
+        horaSalidaEntry.grid(row=row, column=4, padx=0, pady=5, sticky="nsew")
+
+        areaUtilizadaEntry = Label(window, text="micro cine", font=("Verdana",10))
+        areaUtilizadaEntry.grid(row=row, column=5, padx=0, pady=5, sticky="nsew")
+        #fin contenido tabla de ultimos movimientos
+        
+        row+=1
+        cont+=1
+
+    #fin funcion mostrar tablas
+    
 # configuracion ventana principal
 window = Tk()
 window.title("Control asistencia")
@@ -29,53 +90,19 @@ menu.add_cascade(label="Movimientos", menu=menuMovimientos)
 
 # titulo
 titulo = Label(window, text="Bienvenido al sistema de asistencias", font=("Verdana",15,"bold"))
-titulo.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
-window.grid_columnconfigure(0, weight=1)
-# window.grid_rowconfigure(0, weight=1)
+titulo.grid(row=0, column=0, columnspan=6, padx=20, pady=20, sticky="nsew")
 # fin titulo
 
-subtitle = Label(window, text="Ultimos movimientos:", font=("Verdana",10))
-subtitle.grid(row=1, column=0, padx=10, pady=10,sticky="w")
+# Configuración de pesos para columnas
+window.grid_columnconfigure(0, weight=1)
+window.grid_columnconfigure(1, weight=1)
+window.grid_columnconfigure(2, weight=1)
+window.grid_columnconfigure(3, weight=1)
+window.grid_columnconfigure(4, weight=1)
+window.grid_columnconfigure(5, weight=1)
+# window.grid_rowconfigure(0, weight=1)
 
-#inicio titulo de tabla de ultimos movimientos
-dniLabel = Label(window, text="DNI", font=("Verdana",10))
-dniLabel.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
-
-nombreLabel = Label(window, text="Nombre", font=("Verdana",10))
-nombreLabel.grid(row=2, column=1, padx=10, pady=10, sticky="nsew")
-
-fechaLabel = Label(window, text="Fecha", font=("Verdana",10))
-fechaLabel.grid(row=2, column=2, padx=10, pady=10, sticky="nsew")
-
-horaEntadaLabel = Label(window, text="Hora entrada", font=("Verdana",10))
-horaEntadaLabel.grid(row=2, column=3, padx=10, pady=10, sticky="nsew")
-
-horaSalidaLabel = Label(window, text="Hora salida", font=("Verdana",10))
-horaSalidaLabel.grid(row=2, column=4, padx=10, pady=10, sticky="nsew")
-
-areaUtilizadaLabel = Label(window, text="Area utilizada", font=("Verdana",10))
-areaUtilizadaLabel.grid(row=2, column=5, padx=10, pady=10, sticky="nsew")
-#fin titulo tablla de ultimos movimientos
-
-#inicio contenido de tabla de ultimos movimientos
-dniEntry = Label(window, text="43501432", font=("Verdana",10))
-dniEntry.grid(row=3, column=0, padx=10, pady=10, sticky="nsew")
-
-nombreEntry = Label(window, text="David Valdez Gramajo", font=("Verdana",10))
-nombreEntry.grid(row=3, column=1, padx=10, pady=10, sticky="nsew")
-
-fechaEntry = Label(window, text="11/11/2024", font=("Verdana",10))
-fechaEntry.grid(row=3, column=2, padx=10, pady=10, sticky="nsew")
-
-horaEntadaEntry = Label(window, text="14:30", font=("Verdana",10))
-horaEntadaEntry.grid(row=3, column=3, padx=10, pady=10, sticky="nsew")
-
-horaSalidaEntry = Label(window, text="17:00", font=("Verdana",10))
-horaSalidaEntry.grid(row=3, column=4, padx=10, pady=10, sticky="nsew")
-
-areaUtilizadaEntry = Label(window, text="micro cine", font=("Verdana",10))
-areaUtilizadaEntry.grid(row=3, column=5, padx=10, pady=10, sticky="nsew")
-#fin contenido tabla de ultimos movimientos
+mostrarTablaUltimosMovimientos(listaMovimientos)
 
 # ----------------FIN FRONTEND----------------
 
