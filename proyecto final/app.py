@@ -11,9 +11,77 @@ listaMovimientos = [
     [3, 123, "35/11/2024", "27:30", "19:00", "capacitacion"],
 ]
 
+# ----------------FUNCIONES LOGICAS----------------
 
-# def exit():
-    # window.destroy()
+def logicaAñadirAlumno():
+    global dniEntry, nameEntry, domicilioEntry, localidadEntry, provinciaEntry, telefonoEntry, generoEntry, fechaNacEntry, observacionEntry, mailEntry, mensajeErrorAñadirAlumno
+    error=""
+    def validacion():
+        global error
+        error = ""
+        if dniEntry.get() == "":
+            error = "DNI no puede estar vacio"
+            return error
+        if not dniEntry.get().isdigit():
+            error = "DNI no puede ser letras"
+            return error
+        if nameEntry.get()== "":
+            error = "Por favor complete NOMBRE"
+            return error
+        if domicilioEntry.get()== "":
+            error = "Por favor complete DOMICILIO"
+            return error
+        if localidadEntry.get()== "":
+            error = "Por favor complete LOCALIDAD"
+            return error
+        if provinciaEntry.get()== "":
+            error = "Por favor complete PROVINCIA"
+            return error
+        if telefonoEntry.get()== "":
+            error = "Por favor complete TELEFONO"
+            return error
+        if not telefonoEntry.get().isdigit():
+            error = "TELEFONO no puede ser letras"
+            return error
+        if generoEntry.get()== "":
+            error = "Por favor complete GENERO"
+            return error
+        if fechaNacEntry.get()== "":
+            error = "Por favor complete NACIMIENTO"
+            return error
+        if mailEntry.get()== "":
+            error = "Por favor complete MAIL"
+            return error
+        return ""
+    validacion = validacion()
+    if validacion == "":
+    # while verifica si exite el alumno con el dni ingresado
+        cont=0
+        while cont < len(listaAlumnos):
+            if int(dniEntry.get()) == listaAlumnos[cont][0]:  
+                error = "El alumno ya se encuentra registrado"
+                mensajeErrorAñadirAlumno.config(text=error, fg="red")
+                return
+            cont += 1
+        nuevoAlumno = [
+        int(dniEntry.get()), 
+        nameEntry.get(), 
+        domicilioEntry.get(), 
+        localidadEntry.get(), 
+        provinciaEntry.get(), 
+        int(telefonoEntry.get()), 
+        generoEntry.get(),
+        fechaNacEntry.get(),
+        observacionEntry.get(),
+        mailEntry.get()
+        ]
+        listaAlumnos.append(nuevoAlumno)
+        error = "Alumno registrado correctamente"
+        mensajeErrorAñadirAlumno.config(text=error, fg="green")
+    else:
+        mensajeErrorAñadirAlumno.config(text=validacion, fg="red")
+
+# ----------------FIN FUNCIONES LOGICAS----------------
 
 # ----------------INICIO FRONTEND----------------
 
@@ -174,7 +242,20 @@ def mostrarAlumnos():
     # window.grid_rowconfigure(0, weight=1)
     windowAlumnos.mainloop()
 
+dniEntry = None
+nameEntry = None
+domicilioEntry = None
+localidadEntry = None
+provinciaEntry = None
+telefonoEntry = None
+generoEntry = None
+fechaNacEntry = None
+observacionEntry = None
+mailEntry = None
+mensajeErrorAñadirAlumno = None
 def vistaAñadirAlumno():
+    global dniEntry, nameEntry, domicilioEntry, localidadEntry, provinciaEntry, telefonoEntry, generoEntry, fechaNacEntry, observacionEntry, mailEntry, mensajeErrorAñadirAlumno
+
     windowAñadirAlumno = Tk()
     windowAñadirAlumno.title("Añadir Alumno")
     windowAñadirAlumno.geometry("900x600")
@@ -190,55 +271,64 @@ def vistaAñadirAlumno():
     titulo = Label(windowAñadirAlumno, text="Completa el formulario para añadir nuevo alumno", font=("Verdana",15,"bold"))
     titulo.grid(row=0, column=0, columnspan=2, padx=20, pady=20, sticky="nsew")
 
+    # label y entry de dni
     dniLabel = Label(windowAñadirAlumno, text="DNI:", font=("Verdana", 10))
     dniLabel.grid(row=1, column=0, padx=5, pady=5, sticky="nsew")
-    dniEntry = Entry(windowAñadirAlumno)
+    dniEntry = Entry(windowAñadirAlumno, width="30")
     dniEntry.grid(row=2,column=0,padx=5,pady=5, sticky="")
 
+    # label y entry de nombre
     nameLabel = Label(windowAñadirAlumno, text="Nombre:", font=("Verdana", 10))
     nameLabel.grid(row=1, column=1, padx=5, pady=5, sticky="nsew")
-    nameEntry = Entry(windowAñadirAlumno)
+    nameEntry = Entry(windowAñadirAlumno, width="30")
     nameEntry.grid(row=2,column=1,padx=5,pady=5, sticky="")
 
-    # domicilioLabel = Label(windowAñadirAlumno, text="Domicilio:", font=("Verdana", 10))
-    # domicilioLabel.grid(row=5, column=0, columnspan=6, padx=5, pady=5, sticky="nsew")
-    # domicilioEntry = Entry(windowAñadirAlumno)
-    # domicilioEntry.grid(row=6,column=0,padx=5,pady=5)
+    domicilioLabel = Label(windowAñadirAlumno, text="Domicilio:", font=("Verdana", 10))
+    domicilioLabel.grid(row=3, column=0, padx=5, pady=5, sticky="nsew")
+    domicilioEntry = Entry(windowAñadirAlumno, width="30")
+    domicilioEntry.grid(row=4,column=0,padx=5,pady=5)
 
-    # localidadLabel = Label(windowAñadirAlumno, text="Localidad:", font=("Verdana", 10))
-    # localidadLabel.grid(row=7, column=0, columnspan=6, padx=5, pady=5, sticky="nsew")
-    # localidadEntry = Entry(windowAñadirAlumno)
-    # localidadEntry.grid(row=8,column=0,padx=5,pady=5)
+    localidadLabel = Label(windowAñadirAlumno, text="Localidad:", font=("Verdana", 10))
+    localidadLabel.grid(row=3, column=1, padx=5, pady=5, sticky="nsew")
+    localidadEntry = Entry(windowAñadirAlumno, width="30")
+    localidadEntry.grid(row=4,column=1,padx=5,pady=5)
 
-    # provinciaLabel = Label(windowAñadirAlumno, text="Provincia:", font=("Verdana", 10))
-    # provinciaLabel.grid(row=9, column=0, columnspan=6, padx=5, pady=5, sticky="nsew")
-    # provinciaEntry = Entry(windowAñadirAlumno)
-    # provinciaEntry.grid(row=10,column=0,padx=5,pady=5)
+    provinciaLabel = Label(windowAñadirAlumno, text="Provincia:", font=("Verdana", 10))
+    provinciaLabel.grid(row=5, column=0, padx=5, pady=5, sticky="nsew")
+    provinciaEntry = Entry(windowAñadirAlumno, width="30")
+    provinciaEntry.grid(row=6,column=0,padx=5,pady=5)
 
-    # telefonoLabel = Label(windowAñadirAlumno, text="Telefono:", font=("Verdana", 10))
-    # telefonoLabel.grid(row=11, column=0, columnspan=6, padx=5, pady=5, sticky="nsew")
-    # telefonoEntry = Entry(windowAñadirAlumno)
-    # telefonoEntry.grid(row=12,column=0,padx=5,pady=5)
+    telefonoLabel = Label(windowAñadirAlumno, text="Telefono:", font=("Verdana", 10))
+    telefonoLabel.grid(row=5, column=1, padx=5, pady=5, sticky="nsew")
+    telefonoEntry = Entry(windowAñadirAlumno, width="30")
+    telefonoEntry.grid(row=6,column=1,padx=5,pady=5)
 
-    # generoLabel = Label(windowAñadirAlumno, text="Genero:", font=("Verdana", 10))
-    # generoLabel.grid(row=13, column=0, columnspan=6, padx=5, pady=5, sticky="nsew")
-    # generoEntry = Entry(windowAñadirAlumno)
-    # generoEntry.grid(row=14,column=0,padx=5,pady=5)
+    generoLabel = Label(windowAñadirAlumno, text="Genero:", font=("Verdana", 10))
+    generoLabel.grid(row=7, column=0, padx=5, pady=5, sticky="nsew")
+    generoEntry = Entry(windowAñadirAlumno, width="30")
+    generoEntry.grid(row=8,column=0,padx=5,pady=5)
 
-    # fechaNacLabel = Label(windowAñadirAlumno, text="Nacimiento:", font=("Verdana", 10))
-    # fechaNacLabel.grid(row=15, column=0, columnspan=6, padx=5, pady=5, sticky="nsew")
-    # fechaNacEntry = Entry(windowAñadirAlumno)
-    # fechaNacEntry.grid(row=16,column=0,padx=5,pady=5)
+    fechaNacLabel = Label(windowAñadirAlumno, text="Nacimiento:", font=("Verdana", 10))
+    fechaNacLabel.grid(row=7, column=1, padx=5, pady=5, sticky="nsew")
+    fechaNacEntry = Entry(windowAñadirAlumno, width="30")
+    fechaNacEntry.grid(row=8,column=1,padx=5,pady=5)
 
-    # observacionLabel = Label(windowAñadirAlumno, text="Observacion:", font=("Verdana", 10))
-    # observacionLabel.grid(row=17, column=0, columnspan=6, padx=5, pady=5, sticky="nsew")
-    # observacionEntry = Entry(windowAñadirAlumno)
-    # observacionEntry.grid(row=18,column=0,padx=5,pady=5)
+    observacionLabel = Label(windowAñadirAlumno, text="Observacion:", font=("Verdana", 10))
+    observacionLabel.grid(row=9, column=0, padx=5, pady=5, sticky="nsew")
+    observacionEntry = Entry(windowAñadirAlumno, width="30")
+    observacionEntry.grid(row=10,column=0,padx=5,pady=5)
 
-    # mailLabel = Label(windowAñadirAlumno, text="Mail:", font=("Verdana", 10))
-    # mailLabel.grid(row=1, column=0, columnspan=6, padx=5, pady=5, sticky="nsew")
-    # mailEntry = Entry(windowAñadirAlumno)
-    # mailEntry.grid(row=2,column=0,padx=5,pady=5)
+    mailLabel = Label(windowAñadirAlumno, text="Mail:", font=("Verdana", 10))
+    mailLabel.grid(row=9, column=1, padx=5, pady=5, sticky="nsew")
+    mailEntry = Entry(windowAñadirAlumno, width="30")
+    mailEntry.grid(row=10,column=1,padx=5,pady=5)
+
+    # errorAñadirAlumno = mensajeErrorAñadirAlumno
+    mensajeErrorAñadirAlumno = Label(windowAñadirAlumno, text="", fg="red", font=("Verdana", 10))
+    mensajeErrorAñadirAlumno.grid(row=11, column=0, columnspan=2, padx=20, pady=20, sticky="nsew")
+
+    buttonGuardar = Button(windowAñadirAlumno, command=logicaAñadirAlumno, text="Guardar", fg="white",bg="grey", font=("Verdana", 12, "bold"))
+    buttonGuardar.grid(row=12, column=0, columnspan=2, padx=300, pady=20, sticky="nsew")
 
     windowAñadirAlumno.grid_columnconfigure(0, weight=1)
     windowAñadirAlumno.grid_columnconfigure(1, weight=1)
@@ -247,6 +337,35 @@ def vistaAñadirAlumno():
     # windowAñadirAlumno.grid_rowconfigure(1, weight=1)
 
     windowAñadirAlumno.mainloop()
+
+def vistaModificarAlumno():
+    windowModificarAlumno = Tk()
+    windowModificarAlumno.title("Modificar Alumno")
+    windowModificarAlumno.geometry("900x600")
+    windowModificarAlumno.resizable(0,0)
+
+    menu = Menu(windowModificarAlumno)
+    menuExit = Menu(menu, tearoff=0)
+    menuExit.add_command(label="Volver atras", command=windowModificarAlumno.destroy)
+    menu.add_cascade(label="Opciones", menu=menuExit)
+    windowModificarAlumno.config(menu=menu)
+
+    # titulo
+    titulo = Label(windowModificarAlumno, text="Busca por DNI el alumno que desea modificar", font=("Verdana",15,"bold"))
+    titulo.grid(row=0, column=0, columnspan=2, padx=20, pady=20, sticky="nsew")
+
+    buscarAlumnoDni = Entry(windowModificarAlumno, width="30")
+    buscarAlumnoDni.grid(row=1,column=0, padx=5,pady=5, sticky="e")
+    
+    buttonBuscarAlumno = Button(windowModificarAlumno, text="Buscar", fg="white",bg="grey", font=("Verdana", 10, "bold"))
+    buttonBuscarAlumno.grid(row=1, column=1, padx=5, pady=5, sticky="w")
+
+    mensajeError = Label(windowModificarAlumno, text="El alumno no esta registrado", fg="red", font=("Verdana",10))
+    mensajeError.grid(row=2, column=0, columnspan=2, padx=5, pady=5, sticky="nsew")
+
+    windowModificarAlumno.grid_columnconfigure(0, weight=1)
+    windowModificarAlumno.grid_columnconfigure(1, weight=1)
+    windowModificarAlumno.mainloop()
 
 # configuracion ventana principal
 window = Tk()
@@ -262,7 +381,7 @@ def mostrarMenus(window):
     menuAlumnos = Menu(menu, tearoff=0)
     menuAlumnos.add_command(label="Ver todos", command=mostrarAlumnos)
     menuAlumnos.add_command(label="Añadir", command=vistaAñadirAlumno)
-    menuAlumnos.add_command(label="Modificar")
+    menuAlumnos.add_command(label="Modificar", command=vistaModificarAlumno)
     menuAlumnos.add_command(label="Eliminar")
     menu.add_cascade(label="Alumnos", menu=menuAlumnos)
     # fin menu alumnos
