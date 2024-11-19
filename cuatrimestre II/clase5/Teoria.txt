@@ -1,0 +1,24 @@
+Fases para el uso de archivos
+
+1) Crear el archivos
+2) Abrir el archivos
+3) Manipulacion de los archivos
+4) Cierre de los archivos
+
+Modulo io (input/output)
+
+from io import open
+
+Modos para el trabajo con archivos
+
+-> w escritura (si no existe el archivo se crea y si tiene contenido se pierde y se reemplaza por el nuevo contenido)
+-> r lectura
+-> a (append - app end) agregar contenido a un archivo existente. Si no existe se crea el archivo.
+
+Crear un archivo
+
+from io import open
+nombreVariable = open("ruta del archivo .txt","modo")
+
+Ejercicio1
+

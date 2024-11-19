@@ -1,15 +1,64 @@
 from tkinter import *
+import ast
+import os
+# listaAlumnos = [
+#         [43501432, "David Valdez Gramajo", "vallistos 200v m6 c21", "Banda del Rio Sali", "Tucuman", 3813965671, "Masculino", "29/07/2001", "sin observacion", "david@gmail.com"],
+#         [84757575, "Juan Mora", "vallistos 200v m6 c21", "Yerba Buena", "Tucuman", 3813123471, "Masculino", "29/07/2001", "sin observacion", "juan@gmail.com"],
+#         [123, "Javier Milei", "vallistos 200v m6 c21", "Yerba Buena", "Tucuman", 3813123471, "Masculino", "29/07/2001", "sin observacion", "juan@gmail.com"]
+#     ]
 
-listaAlumnos=[
-    [43501432, "David Valdez Gramajo", "vallistos 200v m6 c21", "Banda del Rio Sali", "Tucuman", 3813965671, "Masculino", "29/07/2001", "sin observacion", "david@gmail.com"],
-    [84757575, "Juan Mora", "vallistos 200v m6 c21", "Yerba Buena", "Tucuman", 3813123471, "Masculino", "29/07/2001", "sin observacion", "juan@gmail.com"],
-    [123, "Javier Milei", "vallistos 200v m6 c21", "Yerba Buena", "Tucuman", 3813123471, "Masculino", "29/07/2001", "sin observacion", "juan@gmail.com"]
-]
-listaMovimientos = [
-    [1, 43501432, "11/11/2024", "14:30", "17:00", "Micro cine"],
-    [2, 84757575, "15/11/2024", "15:30", "17:00", "Entretenimiento"],
-    [3, 123, "35/11/2024", "27:30", "19:00", "capacitacion"],
-]
+# listaMovimientos = [
+#         [1, 43501432, "11/11/2024", "14:30", "17:00", "Micro cine"],
+#         [2, 84757575, "15/11/2024", "15:30", "17:00", "Entretenimiento"],
+#         [3, 123, "35/11/2024", "27:30", "19:00", "capacitacion"]
+#     ]
+
+
+def traerInfoAlumnos():
+    rutaArchivoAlumnos = r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\alumnos.txt"
+    listaAlumnos=[]
+
+    if os.path.exists(rutaArchivoAlumnos):
+        with open(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\alumnos.txt","r") as f:
+            contentAlumnos = ast.literal_eval(f.read())
+            print(contentAlumnos)
+            return contentAlumnos
+    else:
+        print("Archivo ALUMNOS no creado")
+        f = open(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\alumnos.txt","w")
+        f.write(str(listaAlumnos))
+        f.close()
+        return listaAlumnos
+
+def traerInfoMovimientos():
+
+    rutaArchivoMovimientos = r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\movimientos.txt"
+    listaMovimientos = []
+
+    if os.path.exists(rutaArchivoMovimientos):
+        with open(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\movimientos.txt","r") as f:
+            contentMovimientos = ast.literal_eval(f.read())
+            print(contentMovimientos)
+            return contentMovimientos
+    else:
+        print("Archivo MOVIMIENTOS no creado")
+        f = open(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\movimientos.txt","w")
+        f.write(str(listaMovimientos))
+        f.close()
+        return listaMovimientos
+
+def guardarAlumno(nuevoAlumno):
+    global listaAlumnos
+    f = open(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\alumnos.txt", "r")
+    listaAlumnos = ast.literal_eval(f.read())
+    listaAlumnos.append(nuevoAlumno)
+    f = open(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\alumnos.txt", "w")
+    f.write(str(listaAlumnos))
+    f.close()
+
+listaAlumnos = traerInfoAlumnos()
+
+listaMovimientos = traerInfoMovimientos()
 
 # ----------------FUNCIONES LOGICAS----------------
 
@@ -75,7 +124,8 @@ def logicaAñadirAlumno():
         observacionEntry.get(),
         mailEntry.get()
         ]
-        listaAlumnos.append(nuevoAlumno)
+        # listaAlumnos.append(nuevoAlumno)
+        guardarAlumno(nuevoAlumno)
         error = "Alumno registrado correctamente"
         mensajeErrorAñadirAlumno.config(text=error, fg="green")
     else:
@@ -88,71 +138,79 @@ def logicaModificarAlumno():
 
 #funciones frontend
 def mostrarTablaUltimosMovimientos(listaMovimientos):
-    #muestra las tablas de ultimos movimientos
     subtitle = Label(window, text="Ultimos movimientos:", font=("Verdana",10))
     subtitle.grid(row=1, column=0, padx=10, pady=10,sticky="w")
+    if len(listaMovimientos) > 0:
+        #muestra las tablas de ultimos movimientos
 
-    #inicio titulo de tabla de ultimos movimientos
-    dniLabel = Label(window, text="DNI", font=("Verdana",10), bg="grey")
-    dniLabel.grid(row=2, column=0, padx=0, pady=10, sticky="nsew",)
+        #inicio titulo de tabla de ultimos movimientos
+        dniLabel = Label(window, text="DNI", font=("Verdana",10), bg="grey")
+        dniLabel.grid(row=2, column=0, padx=0, pady=10, sticky="nsew",)
 
-    nombreLabel = Label(window, text="Nombre", font=("Verdana",10), bg="grey")
-    nombreLabel.grid(row=2, column=1, padx=0, pady=10, sticky="nsew")
+        nombreLabel = Label(window, text="Nombre", font=("Verdana",10), bg="grey")
+        nombreLabel.grid(row=2, column=1, padx=0, pady=10, sticky="nsew")
 
-    fechaLabel = Label(window, text="Fecha", font=("Verdana",10), bg="grey")
-    fechaLabel.grid(row=2, column=2, padx=0, pady=10, sticky="nsew")
+        fechaLabel = Label(window, text="Fecha", font=("Verdana",10), bg="grey")
+        fechaLabel.grid(row=2, column=2, padx=0, pady=10, sticky="nsew")
 
-    horaEntadaLabel = Label(window, text="Hora entrada", font=("Verdana",10), bg="grey")
-    horaEntadaLabel.grid(row=2, column=3, padx=0, pady=10, sticky="nsew")
+        horaEntadaLabel = Label(window, text="Hora entrada", font=("Verdana",10), bg="grey")
+        horaEntadaLabel.grid(row=2, column=3, padx=0, pady=10, sticky="nsew")
 
-    horaSalidaLabel = Label(window, text="Hora salida", font=("Verdana",10), bg="grey")
-    horaSalidaLabel.grid(row=2, column=4, padx=0, pady=10, sticky="nsew")
+        horaSalidaLabel = Label(window, text="Hora salida", font=("Verdana",10), bg="grey")
+        horaSalidaLabel.grid(row=2, column=4, padx=0, pady=10, sticky="nsew")
 
-    areaUtilizadaLabel = Label(window, text="Area utilizada", font=("Verdana",10), bg="grey")
-    areaUtilizadaLabel.grid(row=2, column=5, padx=0, pady=10, sticky="nsew")
-    #fin titulo tablla de ultimos movimientos
+        areaUtilizadaLabel = Label(window, text="Area utilizada", font=("Verdana",10), bg="grey")
+        areaUtilizadaLabel.grid(row=2, column=5, padx=0, pady=10, sticky="nsew")
+        #fin titulo tablla de ultimos movimientos
 
-    #inicio contenido de tabla de ultimos movimientos
-    contadorListaMovimientos = len(listaMovimientos)
-    cont = 0
-    row=3
-    while cont < contadorListaMovimientos:
-        dniEntry = Label(window, text=listaMovimientos[cont][1], font=("Verdana",10))
-        dniEntry.grid(row=row, column=0, padx=0, pady=5, sticky="nsew")
+        #inicio contenido de tabla de ultimos movimientos
+        contadorListaMovimientos = len(listaMovimientos)
+        cont = 0
+        row=3
+    
+        while cont < contadorListaMovimientos:
+            dniEntry = Label(window, text=listaMovimientos[cont][1], font=("Verdana",10))
+            dniEntry.grid(row=row, column=0, padx=0, pady=5, sticky="nsew")
 
-        nombre = ""
-        cont2 = 0
-        while len(listaAlumnos) > cont2:
-            lista = listaAlumnos[cont2]
-            if listaMovimientos[cont][1] in lista:
-                nombre = listaAlumnos[cont2][1]
-                break
-            cont2+=1
-        nombreEntry = Label(window, text=nombre, font=("Verdana",10))
-        nombreEntry.grid(row=row, column=1, padx=0, pady=5, sticky="nsew")
+            nombre = ""
+            cont2 = 0
+            if len(listaAlumnos) > 0:
+                while len(listaAlumnos) > cont2:
+                    lista = listaAlumnos[cont2]
+                    if listaMovimientos[cont][1] in lista:
+                        nombre = listaAlumnos[cont2][1]
+                        break
+                    cont2+=1
+            else:
+                return
+            nombreEntry = Label(window, text=nombre, font=("Verdana",10))
+            nombreEntry.grid(row=row, column=1, padx=0, pady=5, sticky="nsew")
 
-        fechaEntry = Label(window, text=listaMovimientos[cont][2], font=("Verdana",10))
-        fechaEntry.grid(row=row, column=2, padx=0, pady=5, sticky="nsew")
+            fechaEntry = Label(window, text=listaMovimientos[cont][2], font=("Verdana",10))
+            fechaEntry.grid(row=row, column=2, padx=0, pady=5, sticky="nsew")
 
-        horaEntadaEntry = Label(window, text=listaMovimientos[cont][3], font=("Verdana",10))
-        horaEntadaEntry.grid(row=row, column=3, padx=0, pady=5, sticky="nsew")
+            horaEntadaEntry = Label(window, text=listaMovimientos[cont][3], font=("Verdana",10))
+            horaEntadaEntry.grid(row=row, column=3, padx=0, pady=5, sticky="nsew")
 
-        horaSalidaEntry = Label(window, text=listaMovimientos[cont][4], font=("Verdana",10))
-        horaSalidaEntry.grid(row=row, column=4, padx=0, pady=5, sticky="nsew")
+            horaSalidaEntry = Label(window, text=listaMovimientos[cont][4], font=("Verdana",10))
+            horaSalidaEntry.grid(row=row, column=4, padx=0, pady=5, sticky="nsew")
 
-        areaUtilizadaEntry = Label(window, text=listaMovimientos[cont][5], font=("Verdana",10))
-        areaUtilizadaEntry.grid(row=row, column=5, padx=0, pady=5, sticky="nsew")
-        #fin contenido tabla de ultimos movimientos
-        
-        row+=1
-        cont+=1
+            areaUtilizadaEntry = Label(window, text=listaMovimientos[cont][5], font=("Verdana",10))
+            areaUtilizadaEntry.grid(row=row, column=5, padx=0, pady=5, sticky="nsew")
+            #fin contenido tabla de ultimos movimientos
+            
+            row+=1
+            cont+=1
+    else:
+        subtitle = Label(window, text="Sin movimientos...", font=("Verdana",10))
+        subtitle.grid(row=2, column=0, padx=10, pady=10,sticky="w")
     #fin funcion mostrar tablas
     
 def mostrarAlumnos():
     #muestra las tablas de ultimos movimientos
     windowAlumnos = Tk()
     windowAlumnos.title("Alumnos")
-    windowAlumnos.geometry("1200x600")
+    windowAlumnos.geometry("1200x600+100+50")
     windowAlumnos.resizable(0,0)
 
     # mostrarMenus(windowAlumnos)
@@ -165,71 +223,74 @@ def mostrarAlumnos():
     subtitle = Label(windowAlumnos, text="Alumnos:", font=("Verdana",10))
     subtitle.grid(row=0, column=0, padx=10, pady=10,sticky="w")
 
-    #inicio titulo de tabla de Alumnos
-    dniLabel = Label(windowAlumnos, text="DNI", font=("Verdana",10), bg="grey")
-    dniLabel.grid(row=1, column=0, padx=0, pady=10, sticky="nsew",)
+    if len(listaAlumnos) > 0:
+        #inicio titulo de tabla de Alumnos
+        dniLabel = Label(windowAlumnos, text="DNI", font=("Verdana",10), bg="grey")
+        dniLabel.grid(row=1, column=0, padx=0, pady=10, sticky="nsew",)
 
-    nombreLabel = Label(windowAlumnos, text="Nombre", font=("Verdana",10), bg="grey")
-    nombreLabel.grid(row=1, column=1, padx=0, pady=10, sticky="nsew",)
+        nombreLabel = Label(windowAlumnos, text="Nombre", font=("Verdana",10), bg="grey")
+        nombreLabel.grid(row=1, column=1, padx=0, pady=10, sticky="nsew",)
 
-    DomicilioLabel = Label(windowAlumnos, text="Domicilio", font=("Verdana",10), bg="grey")
-    DomicilioLabel.grid(row=1, column=2, padx=0, pady=10, sticky="nsew",)
+        DomicilioLabel = Label(windowAlumnos, text="Domicilio", font=("Verdana",10), bg="grey")
+        DomicilioLabel.grid(row=1, column=2, padx=0, pady=10, sticky="nsew",)
 
-    LocalidadLabel = Label(windowAlumnos, text="Localidad", font=("Verdana",10), bg="grey")
-    LocalidadLabel.grid(row=1, column=3, padx=0, pady=10, sticky="nsew",)
+        LocalidadLabel = Label(windowAlumnos, text="Localidad", font=("Verdana",10), bg="grey")
+        LocalidadLabel.grid(row=1, column=3, padx=0, pady=10, sticky="nsew",)
 
-    provinciaLabel = Label(windowAlumnos, text="Provincia", font=("Verdana",10), bg="grey")
-    provinciaLabel.grid(row=1, column=4, padx=0, pady=10, sticky="nsew",)
+        provinciaLabel = Label(windowAlumnos, text="Provincia", font=("Verdana",10), bg="grey")
+        provinciaLabel.grid(row=1, column=4, padx=0, pady=10, sticky="nsew",)
 
-    TelefonoLabel = Label(windowAlumnos, text="Telefono", font=("Verdana",10), bg="grey")
-    TelefonoLabel.grid(row=1, column=5, padx=0, pady=10, sticky="nsew",)
+        TelefonoLabel = Label(windowAlumnos, text="Telefono", font=("Verdana",10), bg="grey")
+        TelefonoLabel.grid(row=1, column=5, padx=0, pady=10, sticky="nsew",)
 
-    generoLabel = Label(windowAlumnos, text="Genero", font=("Verdana",10), bg="grey")
-    generoLabel.grid(row=1, column=6, padx=0, pady=10, sticky="nsew",)
+        generoLabel = Label(windowAlumnos, text="Genero", font=("Verdana",10), bg="grey")
+        generoLabel.grid(row=1, column=6, padx=0, pady=10, sticky="nsew",)
 
-    fechaNacimientoLabel = Label(windowAlumnos, text="Nacimiento", font=("Verdana",10), bg="grey")
-    fechaNacimientoLabel.grid(row=1, column=7, padx=0, pady=10, sticky="nsew",)
+        fechaNacimientoLabel = Label(windowAlumnos, text="Nacimiento", font=("Verdana",10), bg="grey")
+        fechaNacimientoLabel.grid(row=1, column=7, padx=0, pady=10, sticky="nsew",)
 
-    observacionLabel = Label(windowAlumnos, text="Observacion", font=("Verdana",10), bg="grey")
-    observacionLabel.grid(row=1, column=8, padx=0, pady=10, sticky="nsew",)
+        observacionLabel = Label(windowAlumnos, text="Observacion", font=("Verdana",10), bg="grey")
+        observacionLabel.grid(row=1, column=8, padx=0, pady=10, sticky="nsew",)
 
-    emailLabel = Label(windowAlumnos, text="Email", font=("Verdana",10), bg="grey")
-    emailLabel.grid(row=1, column=9, padx=0, pady=10, sticky="nsew",)
+        emailLabel = Label(windowAlumnos, text="Email", font=("Verdana",10), bg="grey")
+        emailLabel.grid(row=1, column=9, padx=0, pady=10, sticky="nsew",)
 
-    #inicio contenido de tabla de Alumnos
-    cont=0
-    while cont < len(listaAlumnos):
-        dniLabel = Label(windowAlumnos, text=listaAlumnos[cont][0], font=("Verdana",10))
-        dniLabel.grid(row=cont+3, column=0, padx=0, pady=5, sticky="nsew")
+        #inicio contenido de tabla de Alumnos
+        cont=0
+        while cont < len(listaAlumnos):
+            dniLabel = Label(windowAlumnos, text=listaAlumnos[cont][0], font=("Verdana",10))
+            dniLabel.grid(row=cont+3, column=0, padx=0, pady=5, sticky="nsew")
 
-        nombreLabel = Label(windowAlumnos, text=listaAlumnos[cont][1], font=("Verdana",10))
-        nombreLabel.grid(row=cont+3, column=1, padx=0, pady=5, sticky="nsew")
+            nombreLabel = Label(windowAlumnos, text=listaAlumnos[cont][1], font=("Verdana",10))
+            nombreLabel.grid(row=cont+3, column=1, padx=0, pady=5, sticky="nsew")
 
-        DomicilioLabel = Label(windowAlumnos, text=listaAlumnos[cont][2], font=("Verdana",10))
-        DomicilioLabel.grid(row=cont+3, column=2, padx=0, pady=5, sticky="nsew")
+            DomicilioLabel = Label(windowAlumnos, text=listaAlumnos[cont][2], font=("Verdana",10))
+            DomicilioLabel.grid(row=cont+3, column=2, padx=0, pady=5, sticky="nsew")
 
-        LocalidadLabel = Label(windowAlumnos, text=listaAlumnos[cont][3], font=("Verdana",10))
-        LocalidadLabel.grid(row=cont+3, column=3, padx=0, pady=5, sticky="nsew")
+            LocalidadLabel = Label(windowAlumnos, text=listaAlumnos[cont][3], font=("Verdana",10))
+            LocalidadLabel.grid(row=cont+3, column=3, padx=0, pady=5, sticky="nsew")
 
-        provinciaLabel = Label(windowAlumnos, text=listaAlumnos[cont][4], font=("Verdana",10))
-        provinciaLabel.grid(row=cont+3, column=4, padx=0, pady=5, sticky="nsew")
+            provinciaLabel = Label(windowAlumnos, text=listaAlumnos[cont][4], font=("Verdana",10))
+            provinciaLabel.grid(row=cont+3, column=4, padx=0, pady=5, sticky="nsew")
 
-        TelefonoLabel = Label(windowAlumnos, text=listaAlumnos[cont][5], font=("Verdana",10))
-        TelefonoLabel.grid(row=cont+3, column=5, padx=0, pady=5, sticky="nsew")
+            TelefonoLabel = Label(windowAlumnos, text=listaAlumnos[cont][5], font=("Verdana",10))
+            TelefonoLabel.grid(row=cont+3, column=5, padx=0, pady=5, sticky="nsew")
 
-        generoLabel = Label(windowAlumnos, text=listaAlumnos[cont][6], font=("Verdana",10))
-        generoLabel.grid(row=cont+3, column=6, padx=0, pady=5, sticky="nsew")
+            generoLabel = Label(windowAlumnos, text=listaAlumnos[cont][6], font=("Verdana",10))
+            generoLabel.grid(row=cont+3, column=6, padx=0, pady=5, sticky="nsew")
 
-        fechaNacimientoLabel = Label(windowAlumnos, text=listaAlumnos[cont][7], font=("Verdana",10))
-        fechaNacimientoLabel.grid(row=cont+3, column=7, padx=0, pady=5, sticky="nsew")
+            fechaNacimientoLabel = Label(windowAlumnos, text=listaAlumnos[cont][7], font=("Verdana",10))
+            fechaNacimientoLabel.grid(row=cont+3, column=7, padx=0, pady=5, sticky="nsew")
 
-        observacionLabel = Label(windowAlumnos, text=listaAlumnos[cont][8], font=("Verdana",10))
-        observacionLabel.grid(row=cont+3, column=8, padx=0, pady=5, sticky="nsew")
+            observacionLabel = Label(windowAlumnos, text=listaAlumnos[cont][8], font=("Verdana",10))
+            observacionLabel.grid(row=cont+3, column=8, padx=0, pady=5, sticky="nsew")
 
-        emailLabel = Label(windowAlumnos, text=listaAlumnos[cont][9], font=("Verdana",10))
-        emailLabel.grid(row=cont+3, column=9, padx=0, pady=5, sticky="nsew")
-        cont+=1
-
+            emailLabel = Label(windowAlumnos, text=listaAlumnos[cont][9], font=("Verdana",10))
+            emailLabel.grid(row=cont+3, column=9, padx=0, pady=5, sticky="nsew")
+            cont+=1
+    else:
+        subtitle = Label(windowAlumnos, text="sin Alumnos", font=("Verdana",10))
+        subtitle.grid(row=2, column=0, padx=10, pady=10,sticky="w")
     # Configuración de pesos para columnas
     windowAlumnos.grid_columnconfigure(0, weight=1)
     windowAlumnos.grid_columnconfigure(1, weight=1)
@@ -259,7 +320,7 @@ def vistaAñadirAlumno():
 
     windowAñadirAlumno = Tk()
     windowAñadirAlumno.title("Añadir Alumno")
-    windowAñadirAlumno.geometry("900x600")
+    windowAñadirAlumno.geometry("900x600+200+50")
     windowAñadirAlumno.resizable(0,0)
 
     menu = Menu(windowAñadirAlumno)
@@ -461,8 +522,8 @@ def vistaModificarAlumno():
 # configuracion ventana principal
 window = Tk()
 window.title("Control asistencia")
-window.geometry("900x600")
-window.resizable(0,0)
+window.geometry("900x600+200+50")
+# window.resizable(0,0)
 # fin configuracion ventana principal
 
 def mostrarMenus(window):
