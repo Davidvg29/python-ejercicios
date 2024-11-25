@@ -3,7 +3,7 @@ print(f"La lista tienen {len(listaLetras)}")
 print(listaLetras)
 
 valor = int(input("Ingrese un numero entre 0 y 27: ")) #    Ejemplo el usuario ingresa valor 5
-# ¿V WX Y Z A B C D E F G H I J K L M N Ñ O P Q R S T U?
+# ¿V W X Y Z A B C D E F G H I J K L M N Ñ O P Q R S T U?
 
 salida = listaLetras[27-valor:] + listaLetras[:27-valor]
 print(salida)

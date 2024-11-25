@@ -1,19 +1,26 @@
-import os # sistema operativo
-import ast
+listaLetras = list("abcdefghijklmnñopqrstuvwxyz")
+valor = 5
+mezcla = listaLetras[27-valor:] + listaLetras[:27-valor]
+# mezclaInvertida = listaLetras[-(27 - valor):] + listaLetras[:-(27 - valor)]
+mezclaInvertida = {mezcla[i]: listaLetras[i] for i in range(len(listaLetras))}
 
-# f = open(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\test.txt", "w")
-# f.write("[]")
+texto = list("buenisimo")
+textoEncriptado = list("wpzidñdhk")
 
-new = [235, "asdasd", "bbbb"]
-lista = None
-f = open(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\test.txt", "r")
-lista = ast.literal_eval(f.read())
-print(lista)
+# encriptacion
+cont=0
+while len(texto) > cont:
+    if texto[cont] in listaLetras:
+        indice = listaLetras.index(texto[cont])
+        print(f"{texto[cont]}, corresponde, {mezcla[indice]}")
+    cont+=1
 
-lista.append(new)
+print("-----")
 
-f = open(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\test.txt", "w")
-f.write(str(lista))
-print(lista[3])
-f.close()
-
+# desencriptacion
+cont2=0
+while len(textoEncriptado) > cont2:
+    if textoEncriptado[cont2] in mezcla:
+        indice = mezcla.index(textoEncriptado[cont2])
+        print(f"{textoEncriptado[cont2]}, corresponde, {listaLetras[indice]}")
+    cont2 += 1

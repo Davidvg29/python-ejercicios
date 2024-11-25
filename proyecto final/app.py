@@ -1,6 +1,10 @@
 from tkinter import *
 import ast
 import os
+from tkinter import messagebox
+import random
+import matplotlib.pyplot as plt
+
 # listaAlumnos = [
 #         [43501432, "David Valdez Gramajo", "vallistos 200v m6 c21", "Banda del Rio Sali", "Tucuman", 3813965671, "Masculino", "29/07/2001", "sin observacion", "david@gmail.com"],
 #         [84757575, "Juan Mora", "vallistos 200v m6 c21", "Yerba Buena", "Tucuman", 3813123471, "Masculino", "29/07/2001", "sin observacion", "juan@gmail.com"],
@@ -54,6 +58,15 @@ def guardarAlumno(nuevoAlumno):
     listaAlumnos.append(nuevoAlumno)
     f = open(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\alumnos.txt", "w")
     f.write(str(listaAlumnos))
+    f.close()
+
+def guardarMovimientos(nuevoMovimiento):
+    global listaMovimientos
+    f = open(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\movimientos.txt", "r")
+    listaMovimientos = ast.literal_eval(f.read())
+    listaMovimientos.append(nuevoMovimiento)
+    f = open(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\movimientos.txt", "w")
+    f.write(str(listaMovimientos))
     f.close()
 
 listaAlumnos = traerInfoAlumnos()
@@ -130,37 +143,252 @@ def logicaAñadirAlumno():
         mensajeErrorAñadirAlumno.config(text=error, fg="green")
     else:
         mensajeErrorAñadirAlumno.config(text=validacion, fg="red")
-def logicaModificarAlumno():
-    pass
+def logicaModificarAlumno(dniEntry, nameEntry, domicilioEntry, localidadEntry, provinciaEntry, telefonoEntry, generoEntry, fechaNacEntry, observacionEntry, mailEntry, mensajeErrorAñadirAlumno):
+    error=""
+    def validacion():
+        global error
+        error = ""
+        if dniEntry.get() == "":
+            error = "DNI no puede estar vacio"
+            return error
+        if not dniEntry.get().isdigit():
+            error = "DNI no puede ser letras"
+            return error
+        if nameEntry.get()== "":
+            error = "Por favor complete NOMBRE"
+            return error
+        if domicilioEntry.get()== "":
+            error = "Por favor complete DOMICILIO"
+            return error
+        if localidadEntry.get()== "":
+            error = "Por favor complete LOCALIDAD"
+            return error
+        if provinciaEntry.get()== "":
+            error = "Por favor complete PROVINCIA"
+            return error
+        if telefonoEntry.get()== "":
+            error = "Por favor complete TELEFONO"
+            return error
+        if not telefonoEntry.get().isdigit():
+            error = "TELEFONO no puede ser letras"
+            return error
+        if generoEntry.get()== "":
+            error = "Por favor complete GENERO"
+            return error
+        if fechaNacEntry.get()== "":
+            error = "Por favor complete NACIMIENTO"
+            return error
+        if mailEntry.get()== "":
+            error = "Por favor complete MAIL"
+            return error
+        return ""
+    validacion = validacion()
+    if validacion != "":
+        mensajeErrorAñadirAlumno.config(text=validacion, fg="red")
+        return
+    else:
+        infoAlumActualizar = []
+        cont=0
+        while len(listaAlumnos) > cont:
+            if str(dniEntry.get()) == str(listaAlumnos[cont][0]):
+                infoAlumActualizar= listaAlumnos[cont]
+                listaAlumnos[cont][1] = nameEntry.get()
+                listaAlumnos[cont][2] = domicilioEntry.get()
+                listaAlumnos[cont][3] = localidadEntry.get()
+                listaAlumnos[cont][4] = provinciaEntry.get()
+                listaAlumnos[cont][5] = telefonoEntry.get()
+                listaAlumnos[cont][6] = generoEntry.get()
+                listaAlumnos[cont][7] = fechaNacEntry.get()
+                listaAlumnos[cont][8] = observacionEntry.get()
+                listaAlumnos[cont][9] = mailEntry.get()
+            cont+=1
+
+        if len(infoAlumActualizar) > 0:
+            f = open(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\alumnos.txt","w")
+            f.write(str(listaAlumnos))
+            f.close()
+            mensajeErrorAñadirAlumno.config(text="Alumno actualizado", fg="green")
+def logicaEliminarAlumno(dniEntry, mensajeErrorEliminarAlumno, windowEliminarAlumno):
+    cont = 0
+    alumnoEliminado = False
+    while len(listaAlumnos) > cont:
+        if str(listaAlumnos[cont][0]) == str(dniEntry.get()):
+            listaAlumnos.remove(listaAlumnos[cont])
+            f = open(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\alumnos.txt","w")
+            f.write(str(listaAlumnos))
+            f.close()
+            alumnoEliminado = True
+            messagebox.showinfo(message="Alumno eliminado...", title="Eliminacion correcta")
+            windowEliminarAlumno.destroy()
+        cont+=1
+    if not alumnoEliminado:
+        mensajeErrorEliminarAlumno.config(text="Alumno no encontrado", fg="red")
+
+def validacionMovimiento(dniEntry, fechaEntry, horaEntradaEntry, horaSalidaEntry, areaUtilizadaEntry, mensajeErrorAñadirMovimiento):
+    error = ""
+    alumnoEncontrado = False
+    cont = 0
+    while len(listaAlumnos) > cont:
+        if str(listaAlumnos[cont][0]) == str(dniEntry.get()):
+            alumnoEncontrado = True
+            break 
+        cont+=1
+    if not alumnoEncontrado:
+        mensajeErrorAñadirMovimiento.config(text="Alumno no registrado, primero registra el alumno")
+        return
+    else:
+        if len(fechaEntry.get()) < 1:
+            error = "Fecha no puede estar vacia"
+        elif len(horaEntradaEntry.get()) < 1:
+            error = "Hora de entrada no puede estar vacia"
+        elif len(horaSalidaEntry.get()) < 1:
+            error = "Hora de salida no puede estar vacia"
+        elif len(areaUtilizadaEntry.get()) < 1:
+            error = "Area utilizada no puede estar vacia"
+    mensajeErrorAñadirMovimiento.config(text=error)
+    return error
+
+def validacionModificarMovimiento(idEntry, dniEntry, fechaEntry, horaEntradaEntry, horaSalidaEntry, areaUtilizadaEntry, mensajeErrorModificarMovimiento):
+    error = ""
+    if len(fechaEntry.get()) < 1:
+        error = "Fecha no puede estar vacia"
+    elif len(horaEntradaEntry.get()) < 1:
+        error = "Hora de entrada no puede estar vacia"
+    elif len(horaSalidaEntry.get()) < 1:
+        error = "Hora de salida no puede estar vacia"
+    elif len(areaUtilizadaEntry.get()) < 1:
+        error = "Area utilizada no puede estar vacia"
+    mensajeErrorModificarMovimiento.config(text=error)
+    return error
+
+def logicaAñadirMovimiento(idEntry, dniEntry, fechaEntry, horaEntradaEntry, horaSalidaEntry, areaUtilizadaEntry, mensajeErrorAñadirMovimiento, windowAñadirMovimiento):
+    global listaMovimientos
+    validacion = validacionMovimiento(dniEntry, fechaEntry, horaEntradaEntry, horaSalidaEntry, areaUtilizadaEntry, mensajeErrorAñadirMovimiento)
+    if validacion == "":
+        nuevoMovimiento = [
+            int(idEntry.get()),
+            int(dniEntry.get()),
+            fechaEntry.get(), 
+            horaEntradaEntry.get(), 
+            horaSalidaEntry.get(), 
+            areaUtilizadaEntry.get()
+        ]
+        guardarMovimientos(nuevoMovimiento)
+        print("linea 261")
+        messagebox.showinfo("Movimiento añadido", "El nuevo movimiento fue añadido correctamente")
+        mostrarTablaUltimosMovimientos(listaMovimientos)
+        windowAñadirMovimiento.destroy()
+    else:
+        mensajeErrorAñadirMovimiento.config(text=validacion, fg="red")
+
+def logicaModificarMovimiento(idEntry, dniEntry, fechaEntry, horaEntradaEntry, horaSalidaEntry, areaUtilizadaEntry, mensajeError, mensajeErrorModificarMovimiento, windowModificarMovimiento):
+    validacion = validacionModificarMovimiento(idEntry, dniEntry, fechaEntry, horaEntradaEntry, horaSalidaEntry, areaUtilizadaEntry, mensajeErrorModificarMovimiento)
+    if validacion != "":
+        mensajeErrorModificarMovimiento.config(text=validacion, fg="red")
+        return
+    else:
+        infoMovimientoActualizar = []
+        cont=0
+        while len(listaMovimientos) > cont:
+            if str(idEntry.get()) == str(listaMovimientos[cont][0]):
+                infoMovimientoActualizar= listaMovimientos[cont]
+                listaMovimientos[cont][1] = dniEntry.get()
+                listaMovimientos[cont][2] = fechaEntry.get()
+                listaMovimientos[cont][3] = horaEntradaEntry.get()
+                listaMovimientos[cont][4] = areaUtilizadaEntry.get()
+            cont+=1
+
+        if len(infoMovimientoActualizar) > 0:
+            f = open(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\movimientos.txt","w")
+            f.write(str(listaMovimientos))
+            f.close()
+            mensajeErrorModificarMovimiento.config(text="Movimiento actualizado", fg="green")
+            mostrarTablaUltimosMovimientos(listaMovimientos)
+            messagebox.showinfo("Modificar movimiento", "Movimiento modificado con exito")
+            windowModificarMovimiento.destroy()
+    
+def logicaEliminarMovimiento(idEntry, mensajeErrorEliminarMovimiento, windowEliminarMovimiento):
+    movimientoEliminado = False  # Bandera para verificar si se eliminó un movimiento
+
+    # Iterar sobre la lista de movimientos
+    cont = 0
+    while len(listaMovimientos) > cont:
+        if str(listaMovimientos[cont][0]) == str(idEntry):  # Comparar ID como cadenas
+            listaMovimientos.pop(cont)  # Eliminar el movimiento de la lista
+
+            # Guardar la lista actualizada en el archivo
+            with open(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\movimientos.txt", "w") as f:
+                f.write(str(listaMovimientos))
+            
+            movimientoEliminado = True  # Marcar como eliminado
+
+            # Actualizar la tabla
+            mostrarTablaUltimosMovimientos(listaMovimientos)
+
+            # Mostrar mensaje de éxito y cerrar ventana
+            messagebox.showinfo(message="Movimiento eliminado...", title="Eliminación correcta")
+            windowEliminarMovimiento.destroy()
+            break  # Terminar el bucle una vez eliminado
+        cont += 1
+
+    # Si no se encontró el movimiento, mostrar mensaje de error
+    if not movimientoEliminado:
+        mensajeErrorEliminarMovimiento.config(text="Movimiento no encontrado", fg="red")
+
+def verEstadisticaGenero():
+    numMasculinos = 0
+    numFemeninos = 0
+
+    cont = 0
+    while len(listaAlumnos) > cont:
+        if listaAlumnos[cont][6] == "Masculino" or listaAlumnos[cont][6] == "masculino":
+            numMasculinos+=1
+        elif listaAlumnos[cont][6] == "Femenino" or listaAlumnos[cont][6] == "femenino":
+            numFemeninos+=1
+        cont+=1
+    fix, ax = plt.subplots()
+    ax.set_title("Estadistica por generos")
+    ax.pie([numMasculinos,numFemeninos], labels=["Masculinos", "Femeninos"], autopct='%1.1f%%', colors=["lightblue", "pink"])
+    plt.savefig("GraficoEstadisticaGeneros.png")
+    plt.show()
+
 # ----------------FIN FUNCIONES LOGICAS----------------
 
 # ----------------INICIO FRONTEND----------------
 
 #funciones frontend
-def mostrarTablaUltimosMovimientos(listaMovimientos):
+def mostrarTablaUltimosMovimientos(window, listaMovimientos):
+
+    for widget in window.grid_slaves():
+            if int(widget.grid_info()["row"]) >= 1:  # Solo limpiar las filas de la tabla
+                widget.destroy()
+
     subtitle = Label(window, text="Ultimos movimientos:", font=("Verdana",10))
     subtitle.grid(row=1, column=0, padx=10, pady=10,sticky="w")
     if len(listaMovimientos) > 0:
         #muestra las tablas de ultimos movimientos
 
         #inicio titulo de tabla de ultimos movimientos
+        idMovimientoLabel = Label(window, text="ID", font=("Verdana",10), bg="grey")
+        idMovimientoLabel.grid(row=2, column=0, padx=0, pady=10, sticky="nsew",)
+
         dniLabel = Label(window, text="DNI", font=("Verdana",10), bg="grey")
-        dniLabel.grid(row=2, column=0, padx=0, pady=10, sticky="nsew",)
+        dniLabel.grid(row=2, column=1, padx=0, pady=10, sticky="nsew",)
 
         nombreLabel = Label(window, text="Nombre", font=("Verdana",10), bg="grey")
-        nombreLabel.grid(row=2, column=1, padx=0, pady=10, sticky="nsew")
+        nombreLabel.grid(row=2, column=2, padx=0, pady=10, sticky="nsew")
 
         fechaLabel = Label(window, text="Fecha", font=("Verdana",10), bg="grey")
-        fechaLabel.grid(row=2, column=2, padx=0, pady=10, sticky="nsew")
+        fechaLabel.grid(row=2, column=3, padx=0, pady=10, sticky="nsew")
 
         horaEntadaLabel = Label(window, text="Hora entrada", font=("Verdana",10), bg="grey")
-        horaEntadaLabel.grid(row=2, column=3, padx=0, pady=10, sticky="nsew")
+        horaEntadaLabel.grid(row=2, column=4, padx=0, pady=10, sticky="nsew")
 
         horaSalidaLabel = Label(window, text="Hora salida", font=("Verdana",10), bg="grey")
-        horaSalidaLabel.grid(row=2, column=4, padx=0, pady=10, sticky="nsew")
+        horaSalidaLabel.grid(row=2, column=5, padx=0, pady=10, sticky="nsew")
 
         areaUtilizadaLabel = Label(window, text="Area utilizada", font=("Verdana",10), bg="grey")
-        areaUtilizadaLabel.grid(row=2, column=5, padx=0, pady=10, sticky="nsew")
+        areaUtilizadaLabel.grid(row=2, column=6, padx=0, pady=10, sticky="nsew")
         #fin titulo tablla de ultimos movimientos
 
         #inicio contenido de tabla de ultimos movimientos
@@ -169,8 +397,11 @@ def mostrarTablaUltimosMovimientos(listaMovimientos):
         row=3
     
         while cont < contadorListaMovimientos:
+            idEntry = Label(window, text=listaMovimientos[cont][0], font=("Verdana",10))
+            idEntry.grid(row=row, column=0, padx=0, pady=5, sticky="nsew")
+
             dniEntry = Label(window, text=listaMovimientos[cont][1], font=("Verdana",10))
-            dniEntry.grid(row=row, column=0, padx=0, pady=5, sticky="nsew")
+            dniEntry.grid(row=row, column=1, padx=0, pady=5, sticky="nsew")
 
             nombre = ""
             cont2 = 0
@@ -184,19 +415,19 @@ def mostrarTablaUltimosMovimientos(listaMovimientos):
             else:
                 return
             nombreEntry = Label(window, text=nombre, font=("Verdana",10))
-            nombreEntry.grid(row=row, column=1, padx=0, pady=5, sticky="nsew")
+            nombreEntry.grid(row=row, column=2, padx=0, pady=5, sticky="nsew")
 
             fechaEntry = Label(window, text=listaMovimientos[cont][2], font=("Verdana",10))
-            fechaEntry.grid(row=row, column=2, padx=0, pady=5, sticky="nsew")
+            fechaEntry.grid(row=row, column=3, padx=0, pady=5, sticky="nsew")
 
             horaEntadaEntry = Label(window, text=listaMovimientos[cont][3], font=("Verdana",10))
-            horaEntadaEntry.grid(row=row, column=3, padx=0, pady=5, sticky="nsew")
+            horaEntadaEntry.grid(row=row, column=4, padx=0, pady=5, sticky="nsew")
 
             horaSalidaEntry = Label(window, text=listaMovimientos[cont][4], font=("Verdana",10))
-            horaSalidaEntry.grid(row=row, column=4, padx=0, pady=5, sticky="nsew")
+            horaSalidaEntry.grid(row=row, column=5, padx=0, pady=5, sticky="nsew")
 
             areaUtilizadaEntry = Label(window, text=listaMovimientos[cont][5], font=("Verdana",10))
-            areaUtilizadaEntry.grid(row=row, column=5, padx=0, pady=5, sticky="nsew")
+            areaUtilizadaEntry.grid(row=row, column=6, padx=0, pady=5, sticky="nsew")
             #fin contenido tabla de ultimos movimientos
             
             row+=1
@@ -302,6 +533,7 @@ def mostrarAlumnos():
     windowAlumnos.grid_columnconfigure(7, weight=1)
     windowAlumnos.grid_columnconfigure(8, weight=1)
     # window.grid_rowconfigure(0, weight=1)
+    windowAlumnos.iconbitmap(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\juan\asistencia.ico")
     windowAlumnos.mainloop()
 
 dniEntry = None
@@ -322,6 +554,9 @@ def vistaAñadirAlumno():
     windowAñadirAlumno.title("Añadir Alumno")
     windowAñadirAlumno.geometry("900x600+200+50")
     windowAñadirAlumno.resizable(0,0)
+
+    windowAñadirAlumno.iconbitmap(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\juan\asistencia.ico")
+
 
     menu = Menu(windowAñadirAlumno)
     menuExit = Menu(menu, tearoff=0)
@@ -404,8 +639,11 @@ def vistaModificarAlumno():
 
     windowModificarAlumno = Tk()
     windowModificarAlumno.title("Modificar Alumno")
-    windowModificarAlumno.geometry("900x600")
+    windowModificarAlumno.geometry("900x600+200+50")
     windowModificarAlumno.resizable(0,0)
+
+    windowModificarAlumno.iconbitmap(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\juan\asistencia.ico")
+
 
     def buscarALumnoDni():
         if buscarAlumnoDniEntry.get() == "":
@@ -485,7 +723,7 @@ def vistaModificarAlumno():
                 mensajeErrorAñadirAlumno = Label(windowModificarAlumno, text="", fg="red", font=("Verdana", 10))
                 mensajeErrorAñadirAlumno.grid(row=11, column=0, columnspan=2, padx=20, pady=20, sticky="nsew")
 
-                buttonGuardar = Button(windowModificarAlumno, command=logicaAñadirAlumno, text="Modificar", fg="white",bg="grey", font=("Verdana", 12, "bold"))
+                buttonGuardar = Button(windowModificarAlumno, command=lambda: logicaModificarAlumno(dniEntry, nameEntry, domicilioEntry, localidadEntry, provinciaEntry, telefonoEntry, generoEntry, fechaNacEntry, observacionEntry, mailEntry, mensajeError), text="Modificar", fg="white",bg="grey", font=("Verdana", 12, "bold"))
                 buttonGuardar.grid(row=12, column=0, columnspan=2, padx=300, pady=20, sticky="nsew")
 
                 windowModificarAlumno.grid_columnconfigure(0, weight=1)
@@ -519,12 +757,383 @@ def vistaModificarAlumno():
     windowModificarAlumno.grid_columnconfigure(1, weight=1)
     windowModificarAlumno.mainloop()
 
-# configuracion ventana principal
-window = Tk()
-window.title("Control asistencia")
-window.geometry("900x600+200+50")
-# window.resizable(0,0)
-# fin configuracion ventana principal
+def vistaEliminarAlumno():
+    windowEliminarAlumno = Tk()
+    windowEliminarAlumno.title("Eliminar Alumno")
+    windowEliminarAlumno.geometry("900x600+200+50")
+    windowEliminarAlumno.resizable(0,0)
+
+    windowEliminarAlumno.iconbitmap(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\juan\asistencia.ico")
+
+
+    menu = Menu(windowEliminarAlumno)
+    menuExit = Menu(menu, tearoff=0)
+    menuExit.add_command(label="Volver atras", command=windowEliminarAlumno.destroy)
+    menu.add_cascade(label="Opciones", menu=menuExit)
+    windowEliminarAlumno.config(menu=menu)
+
+    # titulo
+    titulo = Label(windowEliminarAlumno, text="Escribe el DNI de alumno para eliminar: ", font=("Verdana",15,"bold"))
+    titulo.grid(row=0, column=0, columnspan=2, padx=20, pady=20, sticky="nsew")
+
+    # label y entry de dni
+    dniLabel = Label(windowEliminarAlumno, text="DNI:", font=("Verdana", 10))
+    dniLabel.grid(row=1, column=0, padx=5, pady=5, sticky="nsew")
+    dniEntry = Entry(windowEliminarAlumno, width="30")
+    dniEntry.grid(row=2,column=0,padx=5,pady=5, sticky="")
+
+    buttonEliminarAlumno = Button(windowEliminarAlumno, command=lambda:logicaEliminarAlumno(dniEntry, mensajeErrorEliminarAlumno, windowEliminarAlumno), text="Eliminar", fg="white",bg="grey", font=("Verdana", 10, "bold"))
+    buttonEliminarAlumno.grid(row=2, column=1, padx=5, pady=5, sticky="w")
+
+    mensajeErrorEliminarAlumno = Label(windowEliminarAlumno, text="", fg="red", font=("Verdana",10))
+    mensajeErrorEliminarAlumno.grid(row=3, column=0,columnspan=1, padx=5, pady=5, sticky="nsew")
+
+    windowEliminarAlumno.grid_columnconfigure(0, weight=1)
+    windowEliminarAlumno.grid_columnconfigure(1, weight=1)
+    windowEliminarAlumno.mainloop()
+
+def vistaAñadirMovimiento():
+    windowAñadirMovimiento = Tk()
+    windowAñadirMovimiento.title("Añadir Movimiento")
+    windowAñadirMovimiento.geometry("900x600+200+50")
+    windowAñadirMovimiento.resizable(0,0)
+
+    windowAñadirMovimiento.iconbitmap(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\juan\asistencia.ico")
+
+
+    menu = Menu(windowAñadirMovimiento)
+    menuExit = Menu(menu, tearoff=0)
+    menuExit.add_command(label="Volver atras", command=windowAñadirMovimiento.destroy)
+    menu.add_cascade(label="Opciones", menu=menuExit)
+    windowAñadirMovimiento.config(menu=menu)
+
+    # titulo
+    titulo = Label(windowAñadirMovimiento, text="Completa el formulario para añadir nuevo movimiento", font=("Verdana",15,"bold"))
+    titulo.grid(row=0, column=0, columnspan=2, padx=20, pady=20, sticky="nsew")
+
+    idLabel = Label(windowAñadirMovimiento, text="ID:", font=("Verdana", 10))
+    idLabel.grid(row=1, column=0, padx=5, pady=5, sticky="nsew")
+    idEntry = Entry(windowAñadirMovimiento, width="30")
+    idEntry.grid(row=2,column=0,padx=5,pady=5, sticky="")
+    idEntry.insert(0, random.randint(1, 999))
+    idEntry.config(state="disabled")
+
+    dniLabel = Label(windowAñadirMovimiento, text="DNI:", font=("Verdana", 10))
+    dniLabel.grid(row=1, column=1, padx=5, pady=5, sticky="nsew")
+    dniEntry = Entry(windowAñadirMovimiento, width="30")
+    dniEntry.grid(row=2,column=1,padx=5,pady=5, sticky="")
+
+    # label y entry de nombre
+    fechaLabel = Label(windowAñadirMovimiento, text="Fecha:", font=("Verdana", 10))
+    fechaLabel.grid(row=3, column=0, padx=5, pady=5, sticky="nsew")
+    fechaEntry = Entry(windowAñadirMovimiento, width="30")
+    fechaEntry.grid(row=4,column=0,padx=5,pady=5, sticky="")
+
+    horaEntradaLabel = Label(windowAñadirMovimiento, text="Hora entrada:", font=("Verdana", 10))
+    horaEntradaLabel.grid(row=3, column=1, padx=5, pady=5, sticky="nsew")
+    horaEntradaEntry = Entry(windowAñadirMovimiento, width="30")
+    horaEntradaEntry.grid(row=4,column=1,padx=5,pady=5)
+
+    horaSalidaLabel = Label(windowAñadirMovimiento, text="Hora salida:", font=("Verdana", 10))
+    horaSalidaLabel.grid(row=5, column=0, padx=5, pady=5, sticky="nsew")
+    horaSalidaEntry = Entry(windowAñadirMovimiento, width="30")
+    horaSalidaEntry.grid(row=6,column=0,padx=5,pady=5)
+
+    areaUtilizadaLabel = Label(windowAñadirMovimiento, text="Area utilizada:", font=("Verdana", 10))
+    areaUtilizadaLabel.grid(row=5, column=1, padx=5, pady=5, sticky="nsew")
+    areaUtilizadaEntry = Entry(windowAñadirMovimiento, width="30")
+    areaUtilizadaEntry.grid(row=6,column=1,padx=5,pady=5)
+
+    buttonGuardar = Button(windowAñadirMovimiento, command=lambda: logicaAñadirMovimiento(idEntry, dniEntry, fechaEntry, horaEntradaEntry, horaSalidaEntry, areaUtilizadaEntry, mensajeErrorAñadirMovimiento, windowAñadirMovimiento), text="Guardar", fg="white",bg="grey", font=("Verdana", 12, "bold"))
+    buttonGuardar.grid(row=8, column=0, columnspan=2, padx=300, pady=20, sticky="nsew")
+    
+    mensajeErrorAñadirMovimiento = Label(windowAñadirMovimiento, text="", fg="red", font=("Verdana", 10))
+    mensajeErrorAñadirMovimiento.grid(row=7, column=0, columnspan=2, padx=20, pady=20, sticky="nsew")
+
+
+    windowAñadirMovimiento.grid_columnconfigure(0, weight=1)
+    windowAñadirMovimiento.grid_columnconfigure(1, weight=1)
+
+    windowAñadirMovimiento.mainloop()
+
+def vistaModificarMovimiento():
+    windowModificarMovimiento = Tk()
+    windowModificarMovimiento.title("Modificar Alumno")
+    windowModificarMovimiento.geometry("900x600+200+50")
+    windowModificarMovimiento.resizable(0,0)
+
+    windowModificarMovimiento.iconbitmap(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\juan\asistencia.ico")
+
+
+    def buscarMovimientoId():
+        if buscarMovimientoIdEntry.get() == "":
+            mensajeError.config(text="Campo vacio, ingrese ID", fg="red")
+            return
+        if not buscarMovimientoIdEntry.get().isdigit():
+            mensajeError.config(text="No puedes ingresar letras, ingrese solo numeros")
+            return
+        cont = 0
+        while len(listaMovimientos) > cont:
+            if int(buscarMovimientoIdEntry.get()) == listaMovimientos[cont][0]:
+                mensajeError.config(text="Movimiento encontrado", fg="green")
+                idLabel = Label(windowModificarMovimiento, text="ID:", font=("Verdana", 10))
+                idLabel.grid(row=1, column=0, padx=5, pady=5, sticky="nsew")
+                idEntry = Entry(windowModificarMovimiento, width="30")
+                idEntry.grid(row=2,column=0,padx=5,pady=5, sticky="")
+                idEntry.insert(0, buscarMovimientoIdEntry.get())
+                idEntry.config(state="disabled")
+
+                dniLabel = Label(windowModificarMovimiento, text="DNI:", font=("Verdana", 10))
+                dniLabel.grid(row=1, column=1, padx=5, pady=5, sticky="nsew")
+                dniEntry = Entry(windowModificarMovimiento, width="30")
+                dniEntry.grid(row=2,column=1,padx=5,pady=5, sticky="")
+                dniEntry.insert(0, listaMovimientos[cont][1])
+                dniEntry.config(state="disabled")
+
+                # label y entry de nombre
+                fechaLabel = Label(windowModificarMovimiento, text="Fecha:", font=("Verdana", 10))
+                fechaLabel.grid(row=3, column=0, padx=5, pady=5, sticky="nsew")
+                fechaEntry = Entry(windowModificarMovimiento, width="30")
+                fechaEntry.grid(row=4,column=0,padx=5,pady=5, sticky="")
+                fechaEntry.insert(0, listaMovimientos[cont][2])
+
+                horaEntradaLabel = Label(windowModificarMovimiento, text="Hora entrada:", font=("Verdana", 10))
+                horaEntradaLabel.grid(row=3, column=1, padx=5, pady=5, sticky="nsew")
+                horaEntradaEntry = Entry(windowModificarMovimiento, width="30")
+                horaEntradaEntry.grid(row=4,column=1,padx=5,pady=5)
+                horaEntradaEntry.insert(0, listaMovimientos[cont][2])
+
+                horaSalidaLabel = Label(windowModificarMovimiento, text="Hora salida:", font=("Verdana", 10))
+                horaSalidaLabel.grid(row=5, column=0, padx=5, pady=5, sticky="nsew")
+                horaSalidaEntry = Entry(windowModificarMovimiento, width="30")
+                horaSalidaEntry.grid(row=6,column=0,padx=5,pady=5)
+                horaSalidaEntry.insert(0, listaMovimientos[cont][3])
+
+                areaUtilizadaLabel = Label(windowModificarMovimiento, text="Area utilizada:", font=("Verdana", 10))
+                areaUtilizadaLabel.grid(row=5, column=1, padx=5, pady=5, sticky="nsew")
+                areaUtilizadaEntry = Entry(windowModificarMovimiento, width="30")
+                areaUtilizadaEntry.grid(row=6,column=1,padx=5,pady=5)
+                areaUtilizadaEntry.insert(0, listaMovimientos[cont][4])
+
+                mensajeErrorModificarMovimiento = Label(windowModificarMovimiento, text="", fg="red", font=("Verdana", 10))
+                mensajeErrorModificarMovimiento.grid(row=8, column=0, columnspan=2, padx=20, pady=20, sticky="nsew")
+
+                buttonGuardar = Button(windowModificarMovimiento, command=lambda: logicaModificarMovimiento(idEntry, dniEntry, fechaEntry, horaEntradaEntry, horaSalidaEntry, areaUtilizadaEntry, mensajeError, mensajeErrorModificarMovimiento, windowModificarMovimiento), text="Guardar", fg="white",bg="grey", font=("Verdana", 12, "bold"))
+                buttonGuardar.grid(row=9, column=0, columnspan=2, padx=300, pady=20, sticky="nsew")
+                return
+            cont+=1
+            mensajeError.config(text="Movimiento inexistente", fg="red")
+
+    menu = Menu(windowModificarMovimiento)
+    menuExit = Menu(menu, tearoff=0)
+    menuExit.add_command(label="Volver atras", command=windowModificarMovimiento.destroy)
+    menu.add_cascade(label="Opciones", menu=menuExit)
+    windowModificarMovimiento.config(menu=menu)
+
+    # titulo
+    titulo = Label(windowModificarMovimiento, text="Busca por ID el movimiento que desea modificar", font=("Verdana",15,"bold"))
+    titulo.grid(row=0, column=0, columnspan=2, padx=20, pady=20, sticky="nsew")
+
+    buscarMovimientoIdEntry = Entry(windowModificarMovimiento, width="30")
+    buscarMovimientoIdEntry.grid(row=1,column=0, padx=5,pady=5, sticky="e")
+    
+    buttonBuscarMovimiento = Button(windowModificarMovimiento, command=buscarMovimientoId, text="Buscar", fg="white",bg="grey", font=("Verdana", 10, "bold"))
+    buttonBuscarMovimiento.grid(row=1, column=1, padx=5, pady=5, sticky="w")
+
+    mensajeError = Label(windowModificarMovimiento, text="", fg="red", font=("Verdana",10))
+    mensajeError.grid(row=2, column=0, columnspan=2, padx=5, pady=5, sticky="nsew")
+
+    windowModificarMovimiento.grid_columnconfigure(0, weight=1)
+    windowModificarMovimiento.grid_columnconfigure(1, weight=1)
+    windowModificarMovimiento.mainloop()
+
+def vistaEliminarMovimiento():
+    windowEliminarMovimiento = Tk()
+    windowEliminarMovimiento.title("Eliminar Movimiento")
+    windowEliminarMovimiento.geometry("900x600+200+50")
+    windowEliminarMovimiento.resizable(0,0)
+
+    windowEliminarMovimiento.iconbitmap(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\juan\asistencia.ico")
+
+
+    menu = Menu(windowEliminarMovimiento)
+    menuExit = Menu(menu, tearoff=0)
+    menuExit.add_command(label="Volver atras", command=windowEliminarMovimiento.destroy)
+    menu.add_cascade(label="Opciones", menu=menuExit)
+    windowEliminarMovimiento.config(menu=menu)
+
+    # titulo
+    titulo = Label(windowEliminarMovimiento, text="Escribe el ID de Movimiento para eliminar: ", font=("Verdana",15,"bold"))
+    titulo.grid(row=0, column=0, columnspan=2, padx=20, pady=20, sticky="nsew")
+
+    # label y entry de dni
+    idLabel = Label(windowEliminarMovimiento, text="ID:", font=("Verdana", 10))
+    idLabel.grid(row=1, column=0, padx=5, pady=5, sticky="nsew")
+    idEntry = Entry(windowEliminarMovimiento, width="30")
+    idEntry.grid(row=2,column=0,padx=5,pady=5, sticky="")
+
+    buttonEliminarMovimiento = Button(windowEliminarMovimiento, command=lambda:logicaEliminarMovimiento(idEntry.get(), mensajeErrorEliminarMovimiento, windowEliminarMovimiento), text="Eliminar", fg="white",bg="grey", font=("Verdana", 10, "bold"))
+    buttonEliminarMovimiento.grid(row=2, column=1, padx=5, pady=5, sticky="w")
+
+    mensajeErrorEliminarMovimiento = Label(windowEliminarMovimiento, text="", fg="red", font=("Verdana",10))
+    mensajeErrorEliminarMovimiento.grid(row=3, column=0,columnspan=1, padx=5, pady=5, sticky="nsew")
+
+    windowEliminarMovimiento.grid_columnconfigure(0, weight=1)
+    windowEliminarMovimiento.grid_columnconfigure(1, weight=1)
+    windowEliminarMovimiento.mainloop()
+
+def vistaAcercaDe():
+    AcercaDe = Tk() 
+
+    AcercaDe.title("Acerca de: Sistema de Asistencia") # Titulo de la ventana
+    AcercaDe.geometry("900x600+200+50") # Tamaño de la ventana
+    # AcercaDe.config(bg="gray") # Color de la ventana
+
+    menu = Menu(AcercaDe)
+    menuExit = Menu(menu, tearoff=0)
+    menuExit.add_command(label="Volver atras", command=AcercaDe.destroy)
+    menu.add_cascade(label="Opciones", menu=menuExit)
+    AcercaDe.config(menu=menu)
+
+    lbl1 = Label(AcercaDe, font=("Verdana",15,"bold"), text= "Sistema de Asistencia")
+    lbl1.pack( pady=10) 
+    lbl2 = Label(AcercaDe, font=("Verdana",10), text= "Versión 1.0")
+    lbl2.pack( pady=10) 
+    lbl3 = Label(AcercaDe, font=("Verdana",10), text= "Desarrollado por David Valdez Gramajo y Juan Mora")
+    lbl3.pack( pady=10) 
+    lbl4 = Label(AcercaDe, font=("Verdana",10), text= "Prof. José Francisco Fernández – Programación II – UTN")
+    lbl4.pack( pady=10) 
+    lbl5 = Label(AcercaDe, font=("Verdana",10), text= "La licencia de este producto es libre para ser usado en los Punto Digitales de la Rep. Argentina")
+    lbl5.pack( pady=10) 
+    lbl6 = Label(AcercaDe, font=("Verdana",12), text= "Gracias por elegir nuestro Sistema de Asistencia")
+    lbl6.pack( pady=10) 
+    lbl7 = Label(AcercaDe, font=("Verdana",12), text= "Consultas: bandadelriosali@puntodigital.gob.ar")
+    lbl7.pack( pady=10) 
+
+    AcercaDe.iconbitmap("E:\\Cosas para pc\\Programacion\\python-ejercicios\\proyecto final\\juan\\asistencia.ico") #Icono del Sistema
+    AcercaDe.mainloop()
+
+def vistaManual():
+    ventanaManual = Tk()
+    ventanaManual.title("Manual de usuario:")
+    ventanaManual.geometry("900x600+200+50")
+    ventanaManual.resizable(0,0)  # Tamaño de la ventana
+    # ventanaManual.config(bg="gray")  # Color de la ventana
+
+    menu = Menu(ventanaManual)
+    menuExit = Menu(menu, tearoff=0)
+    menuExit.add_command(label="Volver atras", command=ventanaManual.destroy)
+    menu.add_cascade(label="Opciones", menu=menuExit)
+    ventanaManual.config(menu=menu)
+
+    texto= """
+    Manual de Usuario: Sistema de Asistencia Punto Digital Banda del Río Salí
+
+    Introducción
+    Este manual tiene como objetivo guiarte en el uso del Sistema de Asistencia del Punto Digital Banda del Río Salí. Este sistema está diseñado para registrar de forma eficiente la circulación de alumnos, facilitando la gestión administrativa y brindando datos precisos sobre la asistencia.
+
+    Funcionalidades Principales
+    - Registro de alumnos: Ingresar los datos personales de cada alumno (nombre completo, género, etc.).
+    - Registro de asistencia: Registrar la fecha, hora de entrada y salida de cada alumno.
+    - Generación de reportes: Obtener informes detallados sobre la asistencia de los alumnos, incluyendo:
+    - Listado de alumnos por día.
+    - Cantidad de alumnos por género.
+    - Movimientos mensuales.
+    - Consulta de información: Buscar información específica sobre un alumno o un período determinado.
+
+    Soporte Técnico
+    En caso de dudas o problemas técnicos, comunícate con el equipo de soporte técnico a través del siguiente correo electrónico: bandadelriosali@puntodigital.gob.ar
+    """
+    textoLabel = Label(ventanaManual, text=texto, font=("Verdana", 12), wraplength=750, justify="left" )
+    textoLabel.pack(padx=20, pady=20)
+
+    # Configurar el ícono del sistema
+    ventanaManual.iconbitmap(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\juan\asistencia.ico")
+
+    ventanaManual.mainloop()
+
+def vistaLogin():
+    def verificar_credenciales():
+        usuario_ingresado = usuario_entry.get().strip()  # Quita espacios en blanco
+        contrasena_ingresada = contrasena_entry.get().strip()
+
+        if len(usuario_ingresado) < 1 or len(contrasena_ingresada) < 1:
+            messagebox.showerror("Error", "Completa los campos correspondientes.")  # Campos vacíos
+            return
+
+        if usuario_ingresado == "admin" and contrasena_ingresada == "12345":
+            messagebox.showinfo("Éxito", "Bienvenido al sistema de asistencia!")
+            ventanaLogin.destroy()  # Cierra la ventana de login
+            main()
+            return
+
+        # Credenciales incorrectas
+        messagebox.showerror("Error", "Usuario o contraseña no válidos.")
+
+
+    ventanaLogin = Tk()
+    ventanaLogin.title("Login sistema de asistencia")
+    ventanaLogin.geometry("900x600+200+50") 
+    ventanaLogin.resizable(0,0)
+
+    # img = tk.PhotoImage(file="C:\Users\Punto Digital\Downloads\logo.png")
+    ventanaLogin.iconbitmap(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\juan\asistencia.ico")
+
+    img = PhotoImage(file=r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\logoPD.png")
+    lbl_img = Label(ventanaLogin, image = img)
+    lbl_img.grid(row=0, column=1, columnspan=3, padx=5, pady=5, sticky="nsew") 
+
+    usuario_label = Label(ventanaLogin, text="Usuario")
+    usuario_label.grid(row=1, column=1, columnspan=3, padx=5, pady=5, sticky="nsew")
+
+    usuario_entry = Entry(ventanaLogin, width=30)
+    usuario_entry.grid(row=2, column=1, columnspan=3, padx=5, pady=5, sticky="nsew")
+
+    contrasena_label = Label(ventanaLogin, text="Contraseña:")
+    contrasena_label.grid(row=3, column=1, columnspan=3, padx=5, pady=5, sticky="nsew")
+
+    contrasena_entry = Entry(ventanaLogin, show="*", width=30)
+    contrasena_entry.grid(row=4, column=1, columnspan=3, padx=5, pady=5, sticky="nsew")
+
+    boton_iniciar_sesion = Button(ventanaLogin, text="Iniciar Sesión", command=verificar_credenciales)
+    boton_iniciar_sesion.grid(row=5, column=1, columnspan=3, padx=5, pady=10, sticky="nsew")
+
+    ventanaLogin.grid_columnconfigure(0, weight=1)
+    ventanaLogin.grid_columnconfigure(1, weight=0)
+    ventanaLogin.grid_columnconfigure(2, weight=0)
+    ventanaLogin.grid_columnconfigure(3, weight=0)
+    ventanaLogin.grid_columnconfigure(4, weight=1)
+    # ventanaLogin.grid_columnconfigure(5, weight=1)
+    # ventanaLogin.grid_columnconfigure(6, weight=1)
+
+    ventanaLogin.mainloop()
+
+def main():
+
+    # configuracion ventana principal
+    window = Tk()
+    window.title("Control asistencia")
+    window.geometry("900x600+200+50")
+    # window.resizable(0,0)
+    # fin configuracion ventana principal
+
+    # Configuración de pesos para columnas
+    window.grid_columnconfigure(0, weight=1)
+    window.grid_columnconfigure(1, weight=1)
+    window.grid_columnconfigure(2, weight=1)
+    window.grid_columnconfigure(3, weight=1)
+    window.grid_columnconfigure(4, weight=1)
+    window.grid_columnconfigure(5, weight=1)
+    window.grid_columnconfigure(6, weight=1)
+    # window.grid_rowconfigure(0, weight=1)
+
+    window.iconbitmap(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\juan\asistencia.ico")
+
+    mostrarTablaUltimosMovimientos(window, listaMovimientos)
+    mostrarMenus(window)
+
+    # window.config(menu = menu)
+    window.mainloop()
 
 def mostrarMenus(window):
     menu = Menu(window)
@@ -534,43 +1143,38 @@ def mostrarMenus(window):
     menuAlumnos.add_command(label="Ver todos", command=mostrarAlumnos)
     menuAlumnos.add_command(label="Añadir", command=vistaAñadirAlumno)
     menuAlumnos.add_command(label="Modificar", command=vistaModificarAlumno)
-    menuAlumnos.add_command(label="Eliminar")
+    menuAlumnos.add_command(label="Eliminar", command=vistaEliminarAlumno)
+    menuAlumnos.add_separator()
+    menuAlumnos.add_command(label="Ver estadistica", command=verEstadisticaGenero)
     menu.add_cascade(label="Alumnos", menu=menuAlumnos)
     # fin menu alumnos
 
     # menu movimientos
     menuMovimientos = Menu(window, tearoff=0)
     # menuMovimientos.add_command(label="Ver todos")
-    menuMovimientos.add_command(label="Añadir")
-    menuMovimientos.add_command(label="Modificar")
-    menuMovimientos.add_command(label="Eliminar")
+    menuMovimientos.add_command(label="Añadir", command=vistaAñadirMovimiento)
+    menuMovimientos.add_command(label="Modificar", command=vistaModificarMovimiento)
+    menuMovimientos.add_command(label="Eliminar", command=vistaEliminarMovimiento)
     menu.add_cascade(label="Movimientos", menu=menuMovimientos)
     # fin menu movimientos
 
     menuExit = Menu(menu, tearoff=0)
-    menuExit.add_command(label="Salir", command=menu.quit)
+    menuExit.add_command(label="Manual", command=vistaManual)
+    menuExit.add_command(label="Acerca de", command=vistaAcercaDe)
+    menuExit.add_separator()
+    menuExit.add_command(label="Salir", command=window.destroy)
     menu.add_cascade(label="Opciones", menu=menuExit)
 
     window.config(menu = menu)
 
-# titulo
-titulo = Label(window, text="Bienvenido al sistema de asistencias", font=("Verdana",15,"bold"))
-titulo.grid(row=0, column=0, columnspan=6, padx=20, pady=20, sticky="nsew")
-# fin titulo
+    # titulo
+    titulo = Label(window, text="Bienvenido al sistema de asistencias", font=("Verdana",15,"bold"))
+    titulo.grid(row=0, column=0, columnspan=7, padx=20, pady=20, sticky="nsew")
+    # fin titulo
 
-# Configuración de pesos para columnas
-window.grid_columnconfigure(0, weight=1)
-window.grid_columnconfigure(1, weight=1)
-window.grid_columnconfigure(2, weight=1)
-window.grid_columnconfigure(3, weight=1)
-window.grid_columnconfigure(4, weight=1)
-window.grid_columnconfigure(5, weight=1)
-# window.grid_rowconfigure(0, weight=1)
 
-mostrarTablaUltimosMovimientos(listaMovimientos)
-mostrarMenus(window)
+vistaLogin()
 
 # ----------------FIN FRONTEND----------------
 
-# window.config(menu = menu)
-window.mainloop()
+
