@@ -75,6 +75,37 @@ listaMovimientos = traerInfoMovimientos()
 
 # ----------------FUNCIONES LOGICAS----------------
 
+def encriptacion(texto):
+    listaLetras = list("abcdefghijklmnñopqrstuvwxyz")
+    valor = 5
+    mezcla = listaLetras[27-valor:] + listaLetras[:27-valor]
+    # mezclaInvertida = listaLetras[-(27 - valor):] + listaLetras[:-(27 - valor)]
+
+    # texto = "admin"
+    textoEncriptado = "vyhdi"
+    # encriptacion
+    textoEncriptadoAux = ""
+    cont=0
+    while len(texto) > cont:
+        if texto[cont] in listaLetras:
+            indice = listaLetras.index(texto[cont])
+            textoEncriptadoAux+=mezcla[indice]
+            # print(f"{texto[cont]}, corresponde, {mezcla[indice]}")
+        cont+=1
+    if textoEncriptadoAux == textoEncriptado:
+        return True
+    else:
+        return False
+
+    # desencriptacion
+    # def desencriptacion():
+    #     cont2=0
+    #     while len(textoEncriptado) > cont2:
+    #         if textoEncriptado[cont2] in mezcla:
+    #             indice = mezcla.index(textoEncriptado[cont2])
+    #             print(f"{textoEncriptado[cont2]}, corresponde, {listaLetras[indice]}")
+    #         cont2 += 1
+
 def logicaAñadirAlumno():
     global dniEntry, nameEntry, domicilioEntry, localidadEntry, provinciaEntry, telefonoEntry, generoEntry, fechaNacEntry, observacionEntry, mailEntry, mensajeErrorAñadirAlumno
     error=""
@@ -1061,9 +1092,11 @@ def vistaLogin():
             messagebox.showerror("Error", "Completa los campos correspondientes.")  # Campos vacíos
             return
 
-        if usuario_ingresado == "admin" and contrasena_ingresada == "12345":
-            messagebox.showinfo("Éxito", "Bienvenido al sistema de asistencia!")
-            ventanaLogin.destroy()  # Cierra la ventana de login
+        validacionContraseña = encriptacion(contrasena_ingresada)
+
+        if usuario_ingresado == "admin" and validacionContraseña == True:
+            messagebox.showinfo("Exito", "Bienvenido al sistema de asistencia!")
+            ventanaLogin.destroy()
             main()
             return
 
