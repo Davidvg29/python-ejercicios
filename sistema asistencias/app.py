@@ -1,9 +1,10 @@
 from tkinter import *
+from tkinter import ttk
 import ast
 import os
 from tkinter import messagebox
 import random
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt #instalar libreria pip install matplotlib
 
 # listaAlumnos = [
 #         [43501432, "David Valdez Gramajo", "vallistos 200v m6 c21", "Banda del Rio Sali", "Tucuman", 3813965671, "Masculino", "29/07/2001", "sin observacion", "david@gmail.com"],
@@ -17,55 +18,63 @@ import matplotlib.pyplot as plt
 #         [3, 123, "35/11/2024", "27:30", "19:00", "capacitacion"]
 #     ]
 
+rutaBase = os.path.dirname(__file__)
+rutaArchivoAlumnos = os.path.join(rutaBase, "alumnos.txt")
+rutaArchivoMovimientos = os.path.join(rutaBase, "movimientos.txt")
+rutaImgIconoAsistencia = os.path.join(rutaBase, "asistencia.ico")
+rutaImgLogoPD = os.path.join(rutaBase, "logoPD.png")
+rutaGraficoEstadisticaGenero = os.path.join(rutaBase, "graficoEstadisticaGeneros.png")
+rutaGraficoEstadisticaAreaUtilizada = os.path.join(rutaBase, "graficoEstadisticaAreaUtilizadas.png")
 
 def traerInfoAlumnos():
-    rutaArchivoAlumnos = r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\alumnos.txt"
+    # rutaArchivoAlumnos = r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\alumnos.txt"
+    global rutaArchivoAlumnos
     listaAlumnos=[]
 
     if os.path.exists(rutaArchivoAlumnos):
-        with open(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\alumnos.txt","r") as f:
+        with open(rutaArchivoAlumnos,"r") as f:
             contentAlumnos = ast.literal_eval(f.read())
             print(contentAlumnos)
             return contentAlumnos
     else:
         print("Archivo ALUMNOS no creado")
-        f = open(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\alumnos.txt","w")
+        f = open(rutaArchivoAlumnos,"w")
         f.write(str(listaAlumnos))
         f.close()
         return listaAlumnos
 
 def traerInfoMovimientos():
-
-    rutaArchivoMovimientos = r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\movimientos.txt"
+    global rutaArchivoMovimientos
+    # rutaArchivoMovimientos = r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\movimientos.txt"
     listaMovimientos = []
 
     if os.path.exists(rutaArchivoMovimientos):
-        with open(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\movimientos.txt","r") as f:
+        with open(rutaArchivoMovimientos,"r") as f:
             contentMovimientos = ast.literal_eval(f.read())
             print(contentMovimientos)
             return contentMovimientos
     else:
         print("Archivo MOVIMIENTOS no creado")
-        f = open(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\movimientos.txt","w")
+        f = open(rutaArchivoMovimientos,"w")
         f.write(str(listaMovimientos))
         f.close()
         return listaMovimientos
 
 def guardarAlumno(nuevoAlumno):
     global listaAlumnos
-    f = open(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\alumnos.txt", "r")
+    f = open(rutaArchivoAlumnos, "r")
     listaAlumnos = ast.literal_eval(f.read())
     listaAlumnos.append(nuevoAlumno)
-    f = open(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\alumnos.txt", "w")
+    f = open(rutaArchivoAlumnos, "w")
     f.write(str(listaAlumnos))
     f.close()
 
 def guardarMovimientos(nuevoMovimiento):
     global listaMovimientos
-    f = open(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\movimientos.txt", "r")
+    f = open(rutaArchivoMovimientos, "r")
     listaMovimientos = ast.literal_eval(f.read())
     listaMovimientos.append(nuevoMovimiento)
-    f = open(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\movimientos.txt", "w")
+    f = open(rutaArchivoMovimientos, "w")
     f.write(str(listaMovimientos))
     f.close()
 
@@ -109,6 +118,7 @@ def encriptacion(texto):
 def logicaAñadirAlumno():
     global dniEntry, nameEntry, domicilioEntry, localidadEntry, provinciaEntry, telefonoEntry, generoEntry, fechaNacEntry, observacionEntry, mailEntry, mensajeErrorAñadirAlumno
     error=""
+    generoEntry = comboboxGenero
     def validacion():
         global error
         error = ""
@@ -176,6 +186,7 @@ def logicaAñadirAlumno():
         mensajeErrorAñadirAlumno.config(text=validacion, fg="red")
 def logicaModificarAlumno(dniEntry, nameEntry, domicilioEntry, localidadEntry, provinciaEntry, telefonoEntry, generoEntry, fechaNacEntry, observacionEntry, mailEntry, mensajeErrorAñadirAlumno):
     error=""
+    generoEntry = comboboxGenero
     def validacion():
         global error
         error = ""
@@ -235,7 +246,7 @@ def logicaModificarAlumno(dniEntry, nameEntry, domicilioEntry, localidadEntry, p
             cont+=1
 
         if len(infoAlumActualizar) > 0:
-            f = open(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\alumnos.txt","w")
+            f = open(rutaArchivoAlumnos,"w")
             f.write(str(listaAlumnos))
             f.close()
             mensajeErrorAñadirAlumno.config(text="Alumno actualizado", fg="green")
@@ -245,7 +256,7 @@ def logicaEliminarAlumno(dniEntry, mensajeErrorEliminarAlumno, windowEliminarAlu
     while len(listaAlumnos) > cont:
         if str(listaAlumnos[cont][0]) == str(dniEntry.get()):
             listaAlumnos.remove(listaAlumnos[cont])
-            f = open(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\alumnos.txt","w")
+            f = open(rutaArchivoAlumnos,"w")
             f.write(str(listaAlumnos))
             f.close()
             alumnoEliminado = True
@@ -255,7 +266,7 @@ def logicaEliminarAlumno(dniEntry, mensajeErrorEliminarAlumno, windowEliminarAlu
     if not alumnoEliminado:
         mensajeErrorEliminarAlumno.config(text="Alumno no encontrado", fg="red")
 
-def validacionMovimiento(dniEntry, fechaEntry, horaEntradaEntry, horaSalidaEntry, areaUtilizadaEntry, mensajeErrorAñadirMovimiento):
+def validacionMovimiento(dniEntry, fechaEntry, horaEntradaEntry, horaSalidaEntry, comboboxAreaUtilizada, mensajeErrorAñadirMovimiento):
     error = ""
     alumnoEncontrado = False
     cont = 0
@@ -274,12 +285,12 @@ def validacionMovimiento(dniEntry, fechaEntry, horaEntradaEntry, horaSalidaEntry
             error = "Hora de entrada no puede estar vacia"
         elif len(horaSalidaEntry.get()) < 1:
             error = "Hora de salida no puede estar vacia"
-        elif len(areaUtilizadaEntry.get()) < 1:
+        elif len(comboboxAreaUtilizada.get()) < 1:
             error = "Area utilizada no puede estar vacia"
     mensajeErrorAñadirMovimiento.config(text=error)
     return error
 
-def validacionModificarMovimiento(idEntry, dniEntry, fechaEntry, horaEntradaEntry, horaSalidaEntry, areaUtilizadaEntry, mensajeErrorModificarMovimiento):
+def validacionModificarMovimiento(idEntry, dniEntry, fechaEntry, horaEntradaEntry, horaSalidaEntry, comboboxAreaUtilizada, mensajeErrorModificarMovimiento):
     error = ""
     if len(fechaEntry.get()) < 1:
         error = "Fecha no puede estar vacia"
@@ -287,14 +298,14 @@ def validacionModificarMovimiento(idEntry, dniEntry, fechaEntry, horaEntradaEntr
         error = "Hora de entrada no puede estar vacia"
     elif len(horaSalidaEntry.get()) < 1:
         error = "Hora de salida no puede estar vacia"
-    elif len(areaUtilizadaEntry.get()) < 1:
+    elif len(comboboxAreaUtilizada.get()) < 1:
         error = "Area utilizada no puede estar vacia"
     mensajeErrorModificarMovimiento.config(text=error)
     return error
 
-def logicaAñadirMovimiento(idEntry, dniEntry, fechaEntry, horaEntradaEntry, horaSalidaEntry, areaUtilizadaEntry, mensajeErrorAñadirMovimiento, windowAñadirMovimiento):
+def logicaAñadirMovimiento(idEntry, dniEntry, fechaEntry, horaEntradaEntry, horaSalidaEntry, comboboxAreaUtilizada, mensajeErrorAñadirMovimiento, windowAñadirMovimiento):
     global listaMovimientos
-    validacion = validacionMovimiento(dniEntry, fechaEntry, horaEntradaEntry, horaSalidaEntry, areaUtilizadaEntry, mensajeErrorAñadirMovimiento)
+    validacion = validacionMovimiento(dniEntry, fechaEntry, horaEntradaEntry, horaSalidaEntry, comboboxAreaUtilizada, mensajeErrorAñadirMovimiento)
     if validacion == "":
         nuevoMovimiento = [
             int(idEntry.get()),
@@ -302,7 +313,7 @@ def logicaAñadirMovimiento(idEntry, dniEntry, fechaEntry, horaEntradaEntry, hor
             fechaEntry.get(), 
             horaEntradaEntry.get(), 
             horaSalidaEntry.get(), 
-            areaUtilizadaEntry.get()
+            comboboxAreaUtilizada.get()
         ]
         guardarMovimientos(nuevoMovimiento)
         print("linea 261")
@@ -312,8 +323,8 @@ def logicaAñadirMovimiento(idEntry, dniEntry, fechaEntry, horaEntradaEntry, hor
     else:
         mensajeErrorAñadirMovimiento.config(text=validacion, fg="red")
 
-def logicaModificarMovimiento(idEntry, dniEntry, fechaEntry, horaEntradaEntry, horaSalidaEntry, areaUtilizadaEntry, mensajeError, mensajeErrorModificarMovimiento, windowModificarMovimiento):
-    validacion = validacionModificarMovimiento(idEntry, dniEntry, fechaEntry, horaEntradaEntry, horaSalidaEntry, areaUtilizadaEntry, mensajeErrorModificarMovimiento)
+def logicaModificarMovimiento(idEntry, dniEntry, fechaEntry, horaEntradaEntry, horaSalidaEntry, comboboxAreaUtilizada, mensajeError, mensajeErrorModificarMovimiento, windowModificarMovimiento):
+    validacion = validacionModificarMovimiento(idEntry, dniEntry, fechaEntry, horaEntradaEntry, horaSalidaEntry, comboboxAreaUtilizada, mensajeErrorModificarMovimiento)
     if validacion != "":
         mensajeErrorModificarMovimiento.config(text=validacion, fg="red")
         return
@@ -323,14 +334,15 @@ def logicaModificarMovimiento(idEntry, dniEntry, fechaEntry, horaEntradaEntry, h
         while len(listaMovimientos) > cont:
             if str(idEntry.get()) == str(listaMovimientos[cont][0]):
                 infoMovimientoActualizar= listaMovimientos[cont]
-                listaMovimientos[cont][1] = dniEntry.get()
+                listaMovimientos[cont][1] = int(dniEntry.get())
                 listaMovimientos[cont][2] = fechaEntry.get()
                 listaMovimientos[cont][3] = horaEntradaEntry.get()
-                listaMovimientos[cont][4] = areaUtilizadaEntry.get()
+                listaMovimientos[cont][4] = horaSalidaEntry.get()
+                listaMovimientos[cont][5] = comboboxAreaUtilizada.get()
             cont+=1
 
         if len(infoMovimientoActualizar) > 0:
-            f = open(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\movimientos.txt","w")
+            f = open(rutaArchivoMovimientos,"w")
             f.write(str(listaMovimientos))
             f.close()
             mensajeErrorModificarMovimiento.config(text="Movimiento actualizado", fg="green")
@@ -348,7 +360,7 @@ def logicaEliminarMovimiento(idEntry, mensajeErrorEliminarMovimiento, windowElim
             listaMovimientos.pop(cont)  # Eliminar el movimiento de la lista
 
             # Guardar la lista actualizada en el archivo
-            with open(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\movimientos.txt", "w") as f:
+            with open(rutaArchivoMovimientos, "w") as f:
                 f.write(str(listaMovimientos))
             
             movimientoEliminado = True  # Marcar como eliminado
@@ -367,28 +379,58 @@ def logicaEliminarMovimiento(idEntry, mensajeErrorEliminarMovimiento, windowElim
         mensajeErrorEliminarMovimiento.config(text="Movimiento no encontrado", fg="red")
 
 def verEstadisticaGenero():
+    global rutaGraficoEstadisticaGenero
     numMasculinos = 0
     numFemeninos = 0
 
-    cont = 0
-    while len(listaAlumnos) > cont:
-        if listaAlumnos[cont][6] == "Masculino" or listaAlumnos[cont][6] == "masculino":
-            numMasculinos+=1
-        elif listaAlumnos[cont][6] == "Femenino" or listaAlumnos[cont][6] == "femenino":
-            numFemeninos+=1
-        cont+=1
-    fix, ax = plt.subplots()
-    ax.set_title("Estadistica por generos")
-    ax.pie([numMasculinos,numFemeninos], labels=["Masculinos", "Femeninos"], autopct='%1.1f%%', colors=["lightblue", "pink"])
-    plt.savefig("GraficoEstadisticaGeneros.png")
-    plt.show()
+    if len(listaAlumnos) > 0:
+        cont = 0
+        while len(listaAlumnos) > cont:
+            if listaAlumnos[cont][6] == "Masculino" or listaAlumnos[cont][6] == "masculino":
+                numMasculinos+=1
+            elif listaAlumnos[cont][6] == "Femenino" or listaAlumnos[cont][6] == "femenino":
+                numFemeninos+=1
+            cont+=1
+        fix, ax = plt.subplots()
+        ax.set_title("Estadistica por generos")
+        ax.pie([numMasculinos,numFemeninos], labels=["Masculinos", "Femeninos"], autopct='%1.1f%%', colors=["lightblue", "pink"])
+        plt.savefig(rutaGraficoEstadisticaGenero)
+        plt.show()
+    else:
+        messagebox.showinfo(message="Estadisticas no disponibles... No hay alumnos.", title="Estadisticas")
+
+def verEstadisticaAreasUtilizadas():
+    numEntretenimiento = 0
+    numCapacitacion = 0
+    numMicrocine = 0
+
+    if len(listaMovimientos) > 0:
+        cont = 0
+        while len(listaMovimientos) > cont:
+            if listaMovimientos[cont][5] == "Entretenimiento":
+                numEntretenimiento+=1
+            elif listaMovimientos[cont][5] == "Capacitacion":
+                numCapacitacion+=1
+            else:
+                numMicrocine+=1
+            cont+=1
+        fix, ax = plt.subplots()
+        ax.bar(["Entretenimiento","Capacitacion","Microcine"],
+            [numEntretenimiento,numCapacitacion,numMicrocine])
+        max_valor = max([numEntretenimiento,numCapacitacion,numMicrocine])  # Máximo valor de las barras
+        ax.set_yticks(range(0, max_valor + 2))
+        plt.savefig(rutaGraficoEstadisticaAreaUtilizada)
+        plt.show()
+    else:
+        messagebox.showinfo(message="Estadisticas no disponibles... No hay movimientos.", title="Estadisticas")
+
 
 # ----------------FIN FUNCIONES LOGICAS----------------
 
 # ----------------INICIO FRONTEND----------------
 
 #funciones frontend
-def mostrarTablaUltimosMovimientos(window, listaMovimientos):
+def mostrarTablaUltimosMovimientos(listaMovimientos):
 
     for widget in window.grid_slaves():
             if int(widget.grid_info()["row"]) >= 1:  # Solo limpiar las filas de la tabla
@@ -564,7 +606,7 @@ def mostrarAlumnos():
     windowAlumnos.grid_columnconfigure(7, weight=1)
     windowAlumnos.grid_columnconfigure(8, weight=1)
     # window.grid_rowconfigure(0, weight=1)
-    windowAlumnos.iconbitmap(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\juan\asistencia.ico")
+    windowAlumnos.iconbitmap(rutaImgIconoAsistencia)
     windowAlumnos.mainloop()
 
 dniEntry = None
@@ -586,7 +628,7 @@ def vistaAñadirAlumno():
     windowAñadirAlumno.geometry("900x600+200+50")
     windowAñadirAlumno.resizable(0,0)
 
-    windowAñadirAlumno.iconbitmap(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\juan\asistencia.ico")
+    windowAñadirAlumno.iconbitmap(rutaImgIconoAsistencia)
 
 
     menu = Menu(windowAñadirAlumno)
@@ -633,8 +675,14 @@ def vistaAñadirAlumno():
 
     generoLabel = Label(windowAñadirAlumno, text="Genero:", font=("Verdana", 10))
     generoLabel.grid(row=7, column=0, padx=5, pady=5, sticky="nsew")
-    generoEntry = Entry(windowAñadirAlumno, width="30")
-    generoEntry.grid(row=8,column=0,padx=5,pady=5)
+    # generoEntry = Entry(windowAñadirAlumno, width="30")
+    # generoEntry.grid(row=8,column=0,padx=5,pady=5)
+
+    global comboboxGenero
+    comboboxGenero = ttk.Combobox(windowAñadirAlumno, state="readonly")
+    comboboxGenero.grid(row=8,column=0,padx=5,pady=5)
+    comboboxGenero["values"] = ("Masculino","Femenino")
+    comboboxGenero.current(0)
 
     fechaNacLabel = Label(windowAñadirAlumno, text="Nacimiento:", font=("Verdana", 10))
     fechaNacLabel.grid(row=7, column=1, padx=5, pady=5, sticky="nsew")
@@ -673,7 +721,7 @@ def vistaModificarAlumno():
     windowModificarAlumno.geometry("900x600+200+50")
     windowModificarAlumno.resizable(0,0)
 
-    windowModificarAlumno.iconbitmap(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\juan\asistencia.ico")
+    windowModificarAlumno.iconbitmap(rutaImgIconoAsistencia)
 
 
     def buscarALumnoDni():
@@ -726,11 +774,11 @@ def vistaModificarAlumno():
                 telefonoEntry.grid(row=6,column=1,padx=5,pady=5)
                 telefonoEntry.insert(0, listaAlumnos[cont][5])
 
-                generoLabel = Label(windowModificarAlumno, text="Genero:", font=("Verdana", 10))
-                generoLabel.grid(row=7, column=0, padx=5, pady=5, sticky="nsew")
-                generoEntry = Entry(windowModificarAlumno, width="30")
-                generoEntry.grid(row=8,column=0,padx=5,pady=5)
-                generoEntry.insert(0, listaAlumnos[cont][6])
+                global comboboxGenero
+                comboboxGenero = ttk.Combobox(windowModificarAlumno, state="readonly")
+                comboboxGenero.grid(row=8,column=0,padx=5,pady=5)
+                comboboxGenero["values"] = ("Masculino","Femenino")
+                comboboxGenero.current(comboboxGenero["values"].index(listaAlumnos[cont][6]))
 
                 fechaNacLabel = Label(windowModificarAlumno, text="Nacimiento:", font=("Verdana", 10))
                 fechaNacLabel.grid(row=7, column=1, padx=5, pady=5, sticky="nsew")
@@ -794,7 +842,7 @@ def vistaEliminarAlumno():
     windowEliminarAlumno.geometry("900x600+200+50")
     windowEliminarAlumno.resizable(0,0)
 
-    windowEliminarAlumno.iconbitmap(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\juan\asistencia.ico")
+    windowEliminarAlumno.iconbitmap(rutaImgIconoAsistencia)
 
 
     menu = Menu(windowEliminarAlumno)
@@ -829,7 +877,7 @@ def vistaAñadirMovimiento():
     windowAñadirMovimiento.geometry("900x600+200+50")
     windowAñadirMovimiento.resizable(0,0)
 
-    windowAñadirMovimiento.iconbitmap(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\juan\asistencia.ico")
+    windowAñadirMovimiento.iconbitmap(rutaImgIconoAsistencia)
 
 
     menu = Menu(windowAñadirMovimiento)
@@ -871,11 +919,17 @@ def vistaAñadirMovimiento():
     horaSalidaEntry.grid(row=6,column=0,padx=5,pady=5)
 
     areaUtilizadaLabel = Label(windowAñadirMovimiento, text="Area utilizada:", font=("Verdana", 10))
-    areaUtilizadaLabel.grid(row=5, column=1, padx=5, pady=5, sticky="nsew")
-    areaUtilizadaEntry = Entry(windowAñadirMovimiento, width="30")
-    areaUtilizadaEntry.grid(row=6,column=1,padx=5,pady=5)
+    areaUtilizadaLabel.grid(row=5, column=1, padx=100, pady=5, sticky="nsew")
+    # areaUtilizadaEntry = Entry(windowAñadirMovimiento, width="30")
+    # areaUtilizadaEntry.grid(row=6,column=1,padx=5,pady=5)
 
-    buttonGuardar = Button(windowAñadirMovimiento, command=lambda: logicaAñadirMovimiento(idEntry, dniEntry, fechaEntry, horaEntradaEntry, horaSalidaEntry, areaUtilizadaEntry, mensajeErrorAñadirMovimiento, windowAñadirMovimiento), text="Guardar", fg="white",bg="grey", font=("Verdana", 12, "bold"))
+    # global comboboxAreaUtilizada
+    comboboxAreaUtilizada = ttk.Combobox(windowAñadirMovimiento, state="readonly")
+    comboboxAreaUtilizada.grid(row=6, column=1, padx=5, pady=5)
+    comboboxAreaUtilizada["values"] = ("Entretenimiento","Capacitacion", "Microcine")
+    comboboxAreaUtilizada.current(0)
+
+    buttonGuardar = Button(windowAñadirMovimiento, command=lambda: logicaAñadirMovimiento(idEntry, dniEntry, fechaEntry, horaEntradaEntry, horaSalidaEntry, comboboxAreaUtilizada, mensajeErrorAñadirMovimiento, windowAñadirMovimiento), text="Guardar", fg="white",bg="grey", font=("Verdana", 12, "bold"))
     buttonGuardar.grid(row=8, column=0, columnspan=2, padx=300, pady=20, sticky="nsew")
     
     mensajeErrorAñadirMovimiento = Label(windowAñadirMovimiento, text="", fg="red", font=("Verdana", 10))
@@ -893,7 +947,7 @@ def vistaModificarMovimiento():
     windowModificarMovimiento.geometry("900x600+200+50")
     windowModificarMovimiento.resizable(0,0)
 
-    windowModificarMovimiento.iconbitmap(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\juan\asistencia.ico")
+    windowModificarMovimiento.iconbitmap(rutaImgIconoAsistencia)
 
 
     def buscarMovimientoId():
@@ -932,24 +986,30 @@ def vistaModificarMovimiento():
                 horaEntradaLabel.grid(row=3, column=1, padx=5, pady=5, sticky="nsew")
                 horaEntradaEntry = Entry(windowModificarMovimiento, width="30")
                 horaEntradaEntry.grid(row=4,column=1,padx=5,pady=5)
-                horaEntradaEntry.insert(0, listaMovimientos[cont][2])
+                horaEntradaEntry.insert(0, listaMovimientos[cont][3])
 
                 horaSalidaLabel = Label(windowModificarMovimiento, text="Hora salida:", font=("Verdana", 10))
                 horaSalidaLabel.grid(row=5, column=0, padx=5, pady=5, sticky="nsew")
                 horaSalidaEntry = Entry(windowModificarMovimiento, width="30")
                 horaSalidaEntry.grid(row=6,column=0,padx=5,pady=5)
-                horaSalidaEntry.insert(0, listaMovimientos[cont][3])
+                horaSalidaEntry.insert(0, listaMovimientos[cont][4])
 
                 areaUtilizadaLabel = Label(windowModificarMovimiento, text="Area utilizada:", font=("Verdana", 10))
                 areaUtilizadaLabel.grid(row=5, column=1, padx=5, pady=5, sticky="nsew")
-                areaUtilizadaEntry = Entry(windowModificarMovimiento, width="30")
-                areaUtilizadaEntry.grid(row=6,column=1,padx=5,pady=5)
-                areaUtilizadaEntry.insert(0, listaMovimientos[cont][4])
+                # areaUtilizadaEntry = Entry(windowModificarMovimiento, width="30")
+                # areaUtilizadaEntry.grid(row=6,column=1,padx=5,pady=5)
+                # areaUtilizadaEntry.insert(0, listaMovimientos[cont][5])
+
+                # global comboboxAreaUtilizada
+                comboboxAreaUtilizada = ttk.Combobox(windowModificarMovimiento, state="readonly")
+                comboboxAreaUtilizada.grid(row=6,column=1,padx=5,pady=5)
+                comboboxAreaUtilizada["values"] = ("Entretenimiento","Capacitacion", "Microcine")
+                comboboxAreaUtilizada.current(comboboxAreaUtilizada["values"].index(listaMovimientos[cont][5]))
 
                 mensajeErrorModificarMovimiento = Label(windowModificarMovimiento, text="", fg="red", font=("Verdana", 10))
                 mensajeErrorModificarMovimiento.grid(row=8, column=0, columnspan=2, padx=20, pady=20, sticky="nsew")
 
-                buttonGuardar = Button(windowModificarMovimiento, command=lambda: logicaModificarMovimiento(idEntry, dniEntry, fechaEntry, horaEntradaEntry, horaSalidaEntry, areaUtilizadaEntry, mensajeError, mensajeErrorModificarMovimiento, windowModificarMovimiento), text="Guardar", fg="white",bg="grey", font=("Verdana", 12, "bold"))
+                buttonGuardar = Button(windowModificarMovimiento, command=lambda: logicaModificarMovimiento(idEntry, dniEntry, fechaEntry, horaEntradaEntry, horaSalidaEntry, comboboxAreaUtilizada, mensajeError, mensajeErrorModificarMovimiento, windowModificarMovimiento), text="Guardar", fg="white",bg="grey", font=("Verdana", 12, "bold"))
                 buttonGuardar.grid(row=9, column=0, columnspan=2, padx=300, pady=20, sticky="nsew")
                 return
             cont+=1
@@ -984,7 +1044,7 @@ def vistaEliminarMovimiento():
     windowEliminarMovimiento.geometry("900x600+200+50")
     windowEliminarMovimiento.resizable(0,0)
 
-    windowEliminarMovimiento.iconbitmap(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\juan\asistencia.ico")
+    windowEliminarMovimiento.iconbitmap(rutaImgIconoAsistencia)
 
 
     menu = Menu(windowEliminarMovimiento)
@@ -1041,7 +1101,7 @@ def vistaAcercaDe():
     lbl7 = Label(AcercaDe, font=("Verdana",12), text= "Consultas: bandadelriosali@puntodigital.gob.ar")
     lbl7.pack( pady=10) 
 
-    AcercaDe.iconbitmap("E:\\Cosas para pc\\Programacion\\python-ejercicios\\proyecto final\\juan\\asistencia.ico") #Icono del Sistema
+    AcercaDe.iconbitmap(rutaImgIconoAsistencia) #Icono del Sistema
     AcercaDe.mainloop()
 
 def vistaManual():
@@ -1079,7 +1139,7 @@ def vistaManual():
     textoLabel.pack(padx=20, pady=20)
 
     # Configurar el ícono del sistema
-    ventanaManual.iconbitmap(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\juan\asistencia.ico")
+    ventanaManual.iconbitmap(rutaImgIconoAsistencia)
 
     ventanaManual.mainloop()
 
@@ -1110,9 +1170,9 @@ def vistaLogin():
     ventanaLogin.resizable(0,0)
 
     # img = tk.PhotoImage(file="C:\Users\Punto Digital\Downloads\logo.png")
-    ventanaLogin.iconbitmap(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\juan\asistencia.ico")
+    ventanaLogin.iconbitmap(rutaImgIconoAsistencia)
 
-    img = PhotoImage(file=r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\logoPD.png")
+    img = PhotoImage(file=rutaImgLogoPD)
     lbl_img = Label(ventanaLogin, image = img)
     lbl_img.grid(row=0, column=1, columnspan=3, padx=5, pady=5, sticky="nsew") 
 
@@ -1144,6 +1204,7 @@ def vistaLogin():
 def main():
 
     # configuracion ventana principal
+    global window
     window = Tk()
     window.title("Control asistencia")
     window.geometry("900x600+200+50")
@@ -1160,9 +1221,9 @@ def main():
     window.grid_columnconfigure(6, weight=1)
     # window.grid_rowconfigure(0, weight=1)
 
-    window.iconbitmap(r"E:\Cosas para pc\Programacion\python-ejercicios\proyecto final\juan\asistencia.ico")
+    window.iconbitmap(rutaImgIconoAsistencia)
 
-    mostrarTablaUltimosMovimientos(window, listaMovimientos)
+    mostrarTablaUltimosMovimientos(listaMovimientos)
     mostrarMenus(window)
 
     # window.config(menu = menu)
@@ -1188,6 +1249,8 @@ def mostrarMenus(window):
     menuMovimientos.add_command(label="Añadir", command=vistaAñadirMovimiento)
     menuMovimientos.add_command(label="Modificar", command=vistaModificarMovimiento)
     menuMovimientos.add_command(label="Eliminar", command=vistaEliminarMovimiento)
+    menuMovimientos.add_separator()
+    menuMovimientos.add_command(label="Ver estadisticas areas utilizadas", command=verEstadisticaAreasUtilizadas)
     menu.add_cascade(label="Movimientos", menu=menuMovimientos)
     # fin menu movimientos
 
